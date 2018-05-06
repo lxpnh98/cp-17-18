@@ -968,22 +968,38 @@ consolidate = B . consol . unB
 \section{Soluções dos alunos}\label{sec:resolucao}
 Os alunos devem colocar neste anexo as suas soluções aos exercícios
 propostos, de acordo com o ``layout'' que se fornece. Não podem ser
-alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou 
+alterados os nomes ou tipos das funções dadas, mas pode ser adicionado texto e / ou
 outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
 \begin{code}
-inBlockchain = undefined
-outBlockchain = undefined
-recBlockchain = undefined    
-cataBlockchain = undefined     
-anaBlockchain = undefined
-hyloBlockchain = undefined
+inBlockchain = either Bc Bcs
+outBlockchain (Bc b) = i1 b
+outBlockchain (Bcs (b,bs)) = i2 (b,bs)
+recBlockchain f    = id -|- (id >< f)
+cataBlockchain g   = g . recBlockchain (cataBlockchain g) . outBlockchain
+anaBlockchain h    = inBlockchain . (recBlockchain (anaBlockchain h) ) . h
+hyloBlockchain g h = cataBlockchain g . anaBlockchain h
 
-allTransactions = undefined
-ledger = undefined
-isValidMagicNr = undefined
+--verificar que implementações estão corretas com exemplos
+
+getTransactions :: Block -> Transactions
+getTransactions = snd . snd
+
+allTransactions = cataBlockchain (either getTransactions (conc . (getTransactions >< id)))
+
+-- melhorar implementação
+ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))) . allTransactions
+    where f (e1, (v, e2)) = (e1, -v) : (e2, v) : []
+          put (e,[]) = [e]
+          put (e,(h:t)) = if fst h == fst e then (fst h, snd e + snd h) : t else h : put (e,t)
+
+getMagicNo = fst
+allMagicNos = cataBlockchain (either (singl . getMagicNo) (cons . (getMagicNo >< id)))
+belongs = uncurry elem
+isValidMagicNr = not . (any belongs) . (anaList ((id -|- (split id snd)) . outList)) . allMagicNos
+
 \end{code}
 
 
@@ -1138,7 +1154,7 @@ instance Arbitrary SmallNat where
     | x' <- shrink x
     , x' >= 0, x' <= 10
     ]
-    
+
 instance Arbitrary a => Arbitrary (Matrix a) where
   arbitrary = do
     rows <- QuickCheck.choose (0,100)
@@ -1172,6 +1188,7 @@ recBlockchain :: (c -> d) -> Either b1 (b2, c) -> Either b1 (b2, d)
 cataBlockchain :: (Either Block (Block, d) -> d) -> Blockchain -> d
 anaBlockchain :: (c -> Either Block (Block, c)) -> c -> Blockchain
 hyloBlockchain :: (Either Block (Block, c1) -> c1) -> (c2 -> Either Block (Block, c2)) -> c2 -> c1
+
 
 list2chain [] = Bc ("numeromagico1", (0, []))
 list2chain [b] = Bc b

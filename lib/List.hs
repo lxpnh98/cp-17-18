@@ -18,7 +18,7 @@ outList (a:x) = i2(a,x)
 
 -- (2) Ana + cata + hylo -------------------------------------------------------
 
-cataList g   = g . recList (cataList g) . outList   
+cataList g   = g . recList (cataList g) . outList
 
 recList  f   = id -|- id >< f                   -- this is F f for this data type
 
