@@ -1006,22 +1006,32 @@ isValidMagicNr = not . (any belongs) . (anaList ((id -|- (split id snd)) . outLi
 \subsection*{Problema 2}
 
 \begin{code}
-inQTree = undefined
-outQTree = undefined
-baseQTree = undefined
-recQTree = undefined
-cataQTree = undefined
-anaQTree = undefined
-hyloQTree = undefined
+inQTree (Left (a,(x,y))) = Cell a x y
+inQTree (Right (a,(b,(c,d)))) = Block a b c d
+outQTree (Cell a x y) = i1 (a,(x,y))
+outQTree (Block a b c d) = i2 (a,(b,(c,d)))
+recQTree f    = baseQTree id f
+cataQTree g   = g . recQTree (cataQTree g) . outQTree
+anaQTree h    = inQTree . (recQTree (anaQTree h) ) . h
+hyloQTree g h = cataQTree g . anaQTree h
+baseQTree f g = (f >< id) -|- (g >< (g >< (g >< g)))
 
 instance Functor QTree where
-    fmap = undefined
+    fmap f = cataQTree (inQTree . (baseQTree f id))
 
 rotateQTree = undefined
-scaleQTree = undefined
-invertQTree = undefined
+
+scaleCell k (Cell a x y) = outQTree (Cell a (x*k) (y*k))
+scaleCell _ b = outQTree b
+scaleQTree k = anaQTree (scaleCell k)
+
+invertPx (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
+invertQTree = fmap invertPx
+
 compressQTree = undefined
+
 outlineQTree = undefined
+
 \end{code}
 
 \subsection*{Problema 3}
