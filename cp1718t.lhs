@@ -989,7 +989,7 @@ getTransactions = snd . snd
 
 allTransactions = cataBlockchain (either getTransactions (conc . (getTransactions >< id)))
 
--- melhorar implementação
+-- implementar com combinadores
 ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))) . allTransactions
     where f (e1, (v, e2)) = (e1, -v) : (e2, v) : []
           put (e,[]) = [e]
@@ -1019,7 +1019,11 @@ baseQTree f g = (f >< id) -|- (g >< (g >< (g >< g)))
 instance Functor QTree where
     fmap f = cataQTree (inQTree . (baseQTree f id))
 
-rotateQTree = undefined
+--rotateCell (a, (x, y)) = (a, (y, x))
+rotateCell = id >< swap
+--rotateBlock (nw, (ne, (sw, se))) = (sw, (nw, (se, ne)))
+rotateBlock = split (fst . snd . snd) (split fst (split (snd . snd . snd) (fst . snd)))
+rotateQTree = anaQTree ((rotateCell -|- rotateBlock) . outQTree)
 
 scaleCell k (Cell a x y) = outQTree (Cell a (x*k) (y*k))
 scaleCell _ b = outQTree b
@@ -1028,7 +1032,16 @@ scaleQTree k = anaQTree (scaleCell k)
 invertPx (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
 invertQTree = fmap invertPx
 
-compressQTree = undefined
+nwCell (Cell a x y) = Cell a x y
+nwCell (Block nw ne se sw) = nwCell nw
+
+-- implementar com combinadores
+compressQTree n (Block nw ne se sw) =
+    if (n > 0)
+    then Block (cT (n-1) nw) (cT (n-1) ne) (cT (n-1) se) (cT (n-1) sw)
+    else nwCell nw
+        where cT = compressQTree
+compressQTree n (Cell a x y) = Cell a x y
 
 outlineQTree = undefined
 
