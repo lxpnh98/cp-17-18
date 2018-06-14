@@ -1032,18 +1032,34 @@ scaleQTree k = anaQTree (scaleCell k)
 invertPx (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
 invertQTree = fmap invertPx
 
-nwCell (Cell a x y) = Cell a x y
-nwCell (Block nw ne se sw) = nwCell nw
+nwCell (Cell a x y) i j = Cell a (x + i) (y + j)
+nwCell (Block nw ne sw se) i j = nwCell nw (i + x2) (j + y3)
+    where (Cell _ x2 _) = nwCell ne 0 0
+          (Cell _ _ y3) = nwCell sw 0 0
 
 -- implementar com combinadores
-compressQTree n (Block nw ne se sw) =
-    if (n > 0)
-    then Block (cT (n-1) nw) (cT (n-1) ne) (cT (n-1) se) (cT (n-1) sw)
-    else nwCell nw
-        where cT = compressQTree
-compressQTree n (Cell a x y) = Cell a x y
+compressQTreeAux n (Block nw ne sw se) =
+    if (n >= 0)
+    then Block (f (n-1) nw) (f (n-1) ne) (f (n-1) sw) (f (n-1) se)
+    else nwCell (Block nw ne sw se) 0 0
+        where f = compressQTreeAux
+compressQTreeAux n (Cell a x y) = Cell a x y
 
-outlineQTree = undefined
+compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
+
+outlineBlock x y = Block
+    (Block (Cell True 1 1)
+           (Cell True (x-2) 1)
+           (Cell True 1 (y-2))
+           (Cell False (x-2) (y-2)))
+    (Cell True 1 (y-1))
+    (Cell True (x-1) 1)
+    (Cell True 1 1)
+
+outlineCell p (a, (x, y)) = cond p (const (outlineBlock x y)) (const (Cell False x y)) a
+outlineQTreeAux p = cataQTree (either (outlineCell p) (inQTree . i2))
+
+outlineQTree p = qt2bm . (outlineQTreeAux p)
 
 \end{code}
 
@@ -1333,7 +1349,7 @@ invertBMP from to = withBMP from to invertbm
 
 depthQTree :: QTree a -> Int
 depthQTree = cataQTree (either (const 0) f)
-    where f (a,(b,(c,d))) = maximum [a,b,c,d]
+    where f (a,(b,(c,d))) = 1 + maximum [a,b,c,d]
 
 compressbm :: Eq a => Int -> Matrix a -> Matrix a
 compressbm n = qt2bm . compressQTree n . bm2qt
