@@ -660,7 +660,7 @@ g 0 = 1
 g (d+1) = underbrace ((d+1)) (s d) * g d
 
 s 0 = 1
-s (d+1) = s n + 1
+s (d+1) = s d + 1
 \end{spec}
 A partir daqui alguém derivou a seguinte implementação:
 \begin{code}
@@ -673,7 +673,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 \begin{propriedade}
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
-prop3 n k = (bin n k) == (fac n) % (fac k * (fac ((n-k))))
+prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k)))))
 \end{code}
 \end{propriedade}
 
