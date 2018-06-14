@@ -1008,8 +1008,10 @@ isValidMagicNr = not . (any belongs) . (anaList ((id -|- (split id snd)) . outLi
 \begin{code}
 inQTree (Left (a,(x,y))) = Cell a x y
 inQTree (Right (a,(b,(c,d)))) = Block a b c d
+
 outQTree (Cell a x y) = i1 (a,(x,y))
 outQTree (Block a b c d) = i2 (a,(b,(c,d)))
+
 recQTree f    = baseQTree id f
 cataQTree g   = g . recQTree (cataQTree g) . outQTree
 anaQTree h    = inQTree . (recQTree (anaQTree h) ) . h
@@ -1073,19 +1075,31 @@ loop = undefined
 \subsection*{Problema 4}
 
 \begin{code}
-inFTree = undefined
-outFTree = undefined
-baseFTree = undefined
-recFTree = undefined
-cataFTree = undefined
-anaFTree = undefined
-hyloFTree = undefined
+
+--inFTree (Left a) = Unit a
+--inFTree (Right (a,(b,c))) = Comp a b c
+inFTree = either Unit (uncurry (\a -> uncurry (Comp a)))
+
+outFTree (Unit a) = i1 a
+outFTree (Comp a b c) = i2 (a,(b,c))
+
+baseFTree f g h = g -|- f >< (h >< h)
+recFTree f = baseFTree id id f
+cataFTree g = g . recFTree (cataFTree g) . outFTree
+anaFTree h = inFTree . (recFTree (anaFTree h)) . h
+hyloFTree g h = cataFTree g . anaFTree h
 
 instance Bifunctor FTree where
-    bimap = undefined
+    bimap f g = cataFTree (inFTree . (baseFTree f g id))
 
-generatePTree = undefined
+-- generatePTree
+
+generatePTree = anaFTree (((const 1.0) -|- (split ((sqrt(2) ^) . succ) (split id id))) . outNat)
+
+-- drawPTree
+
 drawPTree = undefined
+
 \end{code}
 
 \subsection*{Problema 5}
@@ -1413,7 +1427,7 @@ hyloFTree :: (Either b1 (b2, (c, c)) -> c) -> (a -> Either b1 (b2, (a, a))) -> a
 depthFTree :: FTree a b -> Int
 depthFTree = cataFTree (either (const 0) g)
     where g (a,(l,r)) = max l r + 1
-    
+
 isBalancedFTree :: FTree a b -> Bool
 isBalancedFTree = isJust . cataFTree (either (const (Just 0)) g)
     where
