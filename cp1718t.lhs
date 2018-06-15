@@ -1098,17 +1098,23 @@ generatePTree = anaFTree (((const 1.0) -|- (split ((sqrt(2) ^) . succ) (split id
 
 -- drawPTree
 
-drawPTreeAux pos dir (Unit a) = [mkSquare a pos dir]
-drawPTreeAux pos@(x,y) dir@(i,j) (Comp a e d) =
-    [mkSquare a pos dir] ++
-    (drawPTreeAux newPos1 newDir1 e) ++
-    (drawPTreeAux newPos2 newDir2 d)
+-- mudar nomes de funções auxiliares
+-- usar mais os combinadores nas funções de mais alto nível
+
+drawPTreeAux x pos dir (Unit (a,n)) = [mkSquare x n a pos dir]
+drawPTreeAux x pos dir (Comp (a,n) e d) =
+    [mkSquare x n a pos dir] ++
+    (drawPTreeAux x newPos1 newDir1 e) ++
+    (drawPTreeAux x newPos2 newDir2 d)
         where newPos1 = addV pos (addV (resizeV a dir) (rotateV (-90.0) (resizeV (a/2.0) dir)))
               newDir1 = rotateV (-45.0) $ scaleV ((sqrt 2.0)/2.0) dir
               newPos2 = addV pos (addV (resizeV a dir) (rotateV (90.0) (resizeV (a/2.0) dir)))
               newDir2 = rotateV 45.0 $ scaleV ((sqrt 2.0)/2.0) dir
 
-mkSquare a (x, y) dir = Translate x y (Rotate (getAngle dir) (rectangleSolid a a))
+mkSquare max_n n a (x, y) dir =
+    if (n <= max_n)
+    then Translate x y (Rotate (getAngle dir) (rectangleSolid a a))
+    else Blank
 
 addV (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 
@@ -1122,7 +1128,16 @@ resizeV l v = scaleV (l/(lengthV v)) v
 toRad deg = deg / 360.0 * (2.0*pi)
 toDeg rad = rad / (2.0*pi) * 360.0 - 90.0
 
-drawPTree = singl . (Graphics.Gloss.scale 50.0 50.0) . pictures . (drawPTreeAux (0.0,0.0) (0.0,1.0))
+drawPTreeAux2 x = (Graphics.Gloss.scale 50.0 50.0) . pictures . (drawPTreeAux x (0.0,0.0) (0.0,1.0)) . tagPTree 0
+
+tagPTree n = inFTree . (f -|- f >< (rec >< rec)) . outFTree
+    where f = split id (const n)
+          rec = tagPTree (n + 1)
+
+drawPTree t = animation
+    where (animation, _) = for body ([f 0], 0) (depthFTree t)
+          f x = drawPTreeAux2 x t
+          body (r, n) = (r ++ [f (n+1)], n+1)
 
 \end{code}
 
