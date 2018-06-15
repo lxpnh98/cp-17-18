@@ -673,7 +673,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 \begin{propriedade}
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
-prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k)))))
+prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k))))
 \end{code}
 \end{propriedade}
 
@@ -1098,7 +1098,31 @@ generatePTree = anaFTree (((const 1.0) -|- (split ((sqrt(2) ^) . succ) (split id
 
 -- drawPTree
 
-drawPTree = undefined
+drawPTreeAux pos dir (Unit a) = [mkSquare a pos dir]
+drawPTreeAux pos@(x,y) dir@(i,j) (Comp a e d) =
+    [mkSquare a pos dir] ++
+    (drawPTreeAux newPos1 newDir1 e) ++
+    (drawPTreeAux newPos2 newDir2 d)
+        where newPos1 = addV pos (addV (resizeV a dir) (rotateV (-90.0) (resizeV (a/2.0) dir)))
+              newDir1 = rotateV (-45.0) $ scaleV ((sqrt 2.0)/2.0) dir
+              newPos2 = addV pos (addV (resizeV a dir) (rotateV (90.0) (resizeV (a/2.0) dir)))
+              newDir2 = rotateV 45.0 $ scaleV ((sqrt 2.0)/2.0) dir
+
+mkSquare a (x, y) dir = Translate x y (Rotate (getAngle dir) (rectangleSolid a a))
+
+addV (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
+
+getAngle (x, y) = toDeg $ atan2 y x
+rotateV theta (x, y) = (x * cos rad + y * sin rad, y * cos rad - x * sin rad)
+    where rad = toRad theta
+scaleV k (x, y) = (x*k, y*k)
+lengthV (x, y) = sqrt (x^^2 + y^^2)
+resizeV l v = scaleV (l/(lengthV v)) v
+
+toRad deg = deg / 360.0 * (2.0*pi)
+toDeg rad = rad / (2.0*pi) * 360.0 - 90.0
+
+drawPTree = singl . (Graphics.Gloss.scale 50.0 50.0) . pictures . (drawPTreeAux (0.0,0.0) (0.0,1.0))
 
 \end{code}
 
