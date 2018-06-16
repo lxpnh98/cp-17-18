@@ -673,7 +673,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 \begin{propriedade}
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
-prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k)))))
+prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k))))
 \end{code}
 \end{propriedade}
 
@@ -1066,8 +1066,17 @@ outlineQTree p = qt2bm . (outlineQTreeAux p)
 \subsection*{Problema 3}
 
 \begin{code}
-base = undefined
-loop = undefined
+-- Converter as definições de fk, lk, g e s para a forma da regra 50 e aplicar a regra 51 a <fk,lk> e <g,s>
+-- Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop
+base = tuploaux . (split (split (const 1) (succ)) (split (const 1) (const 1)))
+loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
+
+-- Funções auxiliar para conversão de tipos
+tuploaux :: ((Integer, Integer),(Integer, Integer)) -> (Integer, Integer, Integer, Integer)
+tuploaux ((x, y),(w, z)) = (x, y, w ,z)
+
+paresaux :: (Integer, Integer, Integer, Integer) -> ((Integer, Integer),(Integer, Integer))
+paresaux (x, y, w ,z) = ((x, y),(w, z))
 \end{code}
 
 \subsection*{Problema 4}
