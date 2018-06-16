@@ -107,11 +107,11 @@
 \begin{tabular}{ll}
 \textbf{Grupo} nr. & 99 (preencher)
 \\\hline
-a11111 & Nome1 (preencher)	
+a82441 & Alexandre Mendonça Pinho
 \\
-a22222 & Nome2 (preencher)	
+a82202 & Joel Filipe Esteves Gama
 \\
-a33333 & Nome3 (preencher)	
+a82491 & Tiago Martins Pinheiro
 \end{tabular}
 \end{center}
 
@@ -973,6 +973,8 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
+A definição dos combinadores para o Blockchain.
+
 \begin{code}
 inBlockchain = either Bc Bcs
 outBlockchain (Bc b) = i1 b
@@ -981,27 +983,55 @@ recBlockchain f    = id -|- (id >< f)
 cataBlockchain g   = g . recBlockchain (cataBlockchain g) . outBlockchain
 anaBlockchain h    = inBlockchain . (recBlockchain (anaBlockchain h) ) . h
 hyloBlockchain g h = cataBlockchain g . anaBlockchain h
+\end{code}
 
---verificar que implementações estão corretas com exemplos
+A função \textit{allTransactions} é um catamorfismo de Blockchains que tem como resultado uma lista de transações.
 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{allTransactions = |cataNat g|}
+&
+    |Block + Block >< Blockchain|
+           \ar[d]^{|id + id >< (cataNat g)|}
+           \ar[l]_-{|inBlockchain|}
+\\
+     |Transactions|
+&
+     |Block + Block >< Transactions|
+           \ar[l]^-{|g|}
+}
+\end{eqnarray*}
+
+\begin{code}
 getTransactions :: Block -> Transactions
 getTransactions = snd . snd
 
-allTransactions = cataBlockchain (either getTransactions (conc . (getTransactions >< id)))
+allTransactions = cataBlockchain g
+    where g = either getTransactions (conc . (getTransactions >< id))
+
+type Cashflow = (Entity, Value)
 
 -- implementar com combinadores
 ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))) . allTransactions
-    where f (e1, (v, e2)) = (e1, -v) : (e2, v) : []
+    where f :: Transaction -> [Cashflow]
+          f (e1, (v, e2)) = (e1, -v) : (e2, v) : []
+          put :: (Cashflow, Ledger) -> Ledger
           put (e,[]) = [e]
           put (e,(h:t)) = if fst h == fst e then (fst h, snd e + snd h) : t else h : put (e,t)
 
+getMagicNo :: Block -> MagicNo
 getMagicNo = fst
+
+allMagicNos :: Blockchain -> [MagicNo]
 allMagicNos = cataBlockchain (either (singl . getMagicNo) (cons . (getMagicNo >< id)))
+
+belongs :: Eq a => (a, [a]) -> Bool
 belongs = uncurry elem
+
 isValidMagicNr = not . (any belongs) . (anaList ((id -|- (split id snd)) . outList)) . allMagicNos
 
 \end{code}
-
 
 \subsection*{Problema 2}
 
@@ -1200,6 +1230,7 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
 %----------------- Outras definições auxiliares -------------------------------------------%
 
 %if False
+
 \begin{code}
 infixr 0 .==>.
 (.==>.) :: (Testable prop) => (a -> Bool) -> (a -> prop) -> a -> Property
@@ -1339,7 +1370,7 @@ lenChain = cataBlockchain (either (const 1) (succ . p2))
 
 data QTree a = Cell a Int Int | Block (QTree a) (QTree a) (QTree a) (QTree a)
   deriving (Eq,Show)
-  
+
 inQTree :: Either (a, (Int, Int)) (QTree a, (QTree a, (QTree a, QTree a))) -> QTree a
 outQTree :: QTree a -> Either (a, (Int, Int)) (QTree a, (QTree a, (QTree a, QTree a)))
 baseQTree :: (a1 -> b) -> (a2 -> d1) -> Either (a1, d2) (a2, (a2, (a2, a2))) -> Either (b, d2) (d1, (d1, (d1, d1)))
@@ -1379,7 +1410,7 @@ instance Arbitrary PixelRGBA8 where
 
 sizeMatrix :: Matrix a -> (Int,Int)
 sizeMatrix = ncols `split` nrows
-    
+
 sizeQTree :: QTree a -> (Int,Int)
 sizeQTree = cataQTree (either snd g)
     where
@@ -1418,7 +1449,7 @@ outlineBMP from to = withBMP from to (fmap mono . outlinebm (==whitePx))
     where
     mono False = whitePx
     mono True = blackPx
-    
+
 addOutlineBMP :: FilePath -> FilePath -> IO ()
 addOutlineBMP from to = withBMP from to joinbm
     where
@@ -1426,7 +1457,7 @@ addOutlineBMP from to = withBMP from to joinbm
     joinpx px1 False = px1
     joinpx px1 True = blackPx
 
-qtOut = fromLists 
+qtOut = fromLists
     [[  True, True, True, True, True, True, True, True ]
     ,[  True,False,False, True, True, True, True, True ]
     ,[  True,False,False, True,False,False,False, True ]

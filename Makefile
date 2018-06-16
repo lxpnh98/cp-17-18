@@ -1,4 +1,4 @@
-file = ../cp1718t
+file = cp1718t
 
 pdf: $(file).tex
 	pdflatex $(file).tex
