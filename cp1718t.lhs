@@ -1008,8 +1008,10 @@ isValidMagicNr = not . (any belongs) . (anaList ((id -|- (split id snd)) . outLi
 \begin{code}
 inQTree (Left (a,(x,y))) = Cell a x y
 inQTree (Right (a,(b,(c,d)))) = Block a b c d
+
 outQTree (Cell a x y) = i1 (a,(x,y))
 outQTree (Block a b c d) = i2 (a,(b,(c,d)))
+
 recQTree f    = baseQTree id f
 cataQTree g   = g . recQTree (cataQTree g) . outQTree
 anaQTree h    = inQTree . (recQTree (anaQTree h) ) . h
@@ -1082,19 +1084,70 @@ paresaux (x, y, w ,z) = ((x, y),(w, z))
 \subsection*{Problema 4}
 
 \begin{code}
-inFTree = undefined
-outFTree = undefined
-baseFTree = undefined
-recFTree = undefined
-cataFTree = undefined
-anaFTree = undefined
-hyloFTree = undefined
+
+--inFTree (Left a) = Unit a
+--inFTree (Right (a,(b,c))) = Comp a b c
+inFTree = either Unit (uncurry (\a -> uncurry (Comp a)))
+
+outFTree (Unit a) = i1 a
+outFTree (Comp a b c) = i2 (a,(b,c))
+
+baseFTree f g h = g -|- f >< (h >< h)
+recFTree f = baseFTree id id f
+cataFTree g = g . recFTree (cataFTree g) . outFTree
+anaFTree h = inFTree . (recFTree (anaFTree h)) . h
+hyloFTree g h = cataFTree g . anaFTree h
 
 instance Bifunctor FTree where
-    bimap = undefined
+    bimap f g = cataFTree (inFTree . (baseFTree f g id))
 
-generatePTree = undefined
-drawPTree = undefined
+-- generatePTree
+
+generatePTree = anaFTree (((const 1.0) -|- (split ((sqrt(2) ^) . succ) (split id id))) . outNat)
+
+-- drawPTree
+
+-- mudar nomes de funções auxiliares
+-- usar mais os combinadores nas funções de mais alto nível
+
+drawPTreeAux x pos dir (Unit (a,n)) = [mkSquare x n a pos dir]
+drawPTreeAux x pos dir (Comp (a,n) e d) =
+    [mkSquare x n a pos dir] ++
+    (drawPTreeAux x newPos1 newDir1 e) ++
+    (drawPTreeAux x newPos2 newDir2 d)
+        where newPos1 = addV pos (addV (resizeV a dir) (rotateV (-90.0) (resizeV (a/2.0) dir)))
+              newDir1 = rotateV (-45.0) $ scaleV ((sqrt 2.0)/2.0) dir
+              newPos2 = addV pos (addV (resizeV a dir) (rotateV (90.0) (resizeV (a/2.0) dir)))
+              newDir2 = rotateV 45.0 $ scaleV ((sqrt 2.0)/2.0) dir
+
+mkSquare max_n n a (x, y) dir =
+    if (n <= max_n)
+    then Translate x y (Rotate (getAngle dir) (rectangleSolid a a))
+    else Blank
+
+addV (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
+
+getAngle (x, y) = toDeg $ atan2 y x
+rotateV theta (x, y) = (x * cos rad + y * sin rad, y * cos rad - x * sin rad)
+    where rad = toRad theta
+scaleV k (x, y) = (x*k, y*k)
+lengthV (x, y) = sqrt (x^^2 + y^^2)
+resizeV l v = scaleV (l/(lengthV v)) v
+
+toRad deg = deg / 360.0 * (2.0*pi)
+toDeg rad = rad / (2.0*pi) * 360.0 - 90.0
+
+drawPTreeAux2 x = (Graphics.Gloss.scale 50.0 50.0) . pictures . (drawPTreeAux x (0.0,0.0) (0.0,1.0)) . tagPTree 0
+
+tagPTree n = inFTree . (f -|- f >< (rec >< rec)) . outFTree
+    where f = split id (const n)
+          rec = tagPTree (n + 1)
+
+drawPTree t = animation
+    where (animation, _) = for body ([f 0], 0) (depthFTree t)
+          f x = drawPTreeAux2 x t
+          body (r, n) = (r ++ [f (n+1)], n+1)
+
 \end{code}
 
 \subsection*{Problema 5}
@@ -1422,7 +1475,7 @@ hyloFTree :: (Either b1 (b2, (c, c)) -> c) -> (a -> Either b1 (b2, (a, a))) -> a
 depthFTree :: FTree a b -> Int
 depthFTree = cataFTree (either (const 0) g)
     where g (a,(l,r)) = max l r + 1
-    
+
 isBalancedFTree :: FTree a b -> Bool
 isBalancedFTree = isJust . cataFTree (either (const (Just 0)) g)
     where
