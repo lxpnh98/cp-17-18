@@ -985,15 +985,33 @@ anaBlockchain h    = inBlockchain . (recBlockchain (anaBlockchain h) ) . h
 hyloBlockchain g h = cataBlockchain g . anaBlockchain h
 \end{code}
 
+\subsubsection{allTransactions}
+
+A partir de um bloco, podemos obter a sua lista de transações.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |MagicNo >< (Time >< Transactions)|
+           \ar[r]_-{|snd . snd|}
+&
+    |Transactions|
+}
+\end{eqnarray*}
+
+\begin{code}
+getTransactions :: Block -> Transactions
+getTransactions = snd . snd
+\end{code}
+
 A função \textit{allTransactions} é um catamorfismo de Blockchains que tem como resultado uma lista de transações.
 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
     |Blockchain|
-           \ar[d]_-{allTransactions = |cataNat g|}
+           \ar[d]_-{allTransactions = |cataBlockchain g|}
 &
     |Block + Block >< Blockchain|
-           \ar[d]^{|id + id >< (cataNat g)|}
+           \ar[d]^{|id + id >< (cataBlockchain g)|}
            \ar[l]_-{|inBlockchain|}
 \\
      |Transactions|
@@ -1004,14 +1022,21 @@ A função \textit{allTransactions} é um catamorfismo de Blockchains que tem co
 \end{eqnarray*}
 
 \begin{code}
-getTransactions :: Block -> Transactions
-getTransactions = snd . snd
-
 allTransactions = cataBlockchain g
     where g = either getTransactions (conc . (getTransactions >< id))
+\end{code}
 
+\subsubsection{ledger}
+
+É definido um tipo auxiliar, \texttt{Cashflow}, que representa um depósito de um certo valor na conta de uma entidade.
+
+\begin{code}
 type Cashflow = (Entity, Value)
+\end{code}
 
+Para construir o ledger, primeiro extrai-se todas as transações do blockchain. Depois, através de um catamorfismo, é necessário transformar a lista de transações numa lista de cashflows. Finalmente, são agregados os resultados somando todos os cashflows pertencentes à mesma entidade, também através de um catamorfismo.
+
+\begin{code}
 -- implementar com combinadores
 ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))) . allTransactions
     where f :: Transaction -> [Cashflow]
@@ -1020,16 +1045,97 @@ ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))
           put (e,[]) = [e]
           put (e,(h:t)) = if fst h == fst e then (fst h, snd e + snd h) : t else h : put (e,t)
 
+\end{code}
+
+A função auxiliar \texttt{f} converte uma transação numa lista com dois cashflows.
+
+A função auxiliar \texttt{put} trata de atualizar o ledger com um cashflow, adicionando ao valor da entidade se já consta no ledger, ou adicionando um novo elemento à lista (uma nova entidade).
+
+
+\subsubsection{isValidMagicNr}
+
+Cada bloco tem o seu número mágico.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |MagicNo >< (Time >< Transactions)|
+           \ar[r]_-{|fst|}
+&
+    |MagicNo|
+}
+\end{eqnarray*}
+
+\begin{code}
+
 getMagicNo :: Block -> MagicNo
 getMagicNo = fst
 
+\end{code}
+
+Para verificar se os número mágicos são válidos, é preciso primeiro obter a lista de todos os números mágicos, o que é feito através de um catamorfismo:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{allMagicNos = |cataBlockchain g|}
+&
+    |Block + Block >< Blockchain|
+           \ar[d]^{|id + id >< (cataBlockchain g)|}
+           \ar[l]_-{|inBlockchain|}
+\\
+     |[MagicNo]|
+&
+     |Block + Block >< [MagicNo]|
+           \ar[l]^-{|g|}
+}
+\end{eqnarray*}
+
+\begin{code}
+
 allMagicNos :: Blockchain -> [MagicNo]
-allMagicNos = cataBlockchain (either (singl . getMagicNo) (cons . (getMagicNo >< id)))
+allMagicNos = cataBlockchain g
+    where g = either (singl . getMagicNo) (cons . (getMagicNo >< id))
+
+\end{code}
+
+Com a lista de todos os números mágicos, podemos construir, através de um anamorfismo, a lista dos pares cabeça-cauda, onde cada elemento é emparelhado com a lista dos elementos que lhe seguem. Os elementos da lista de números mágicos são todos únicos se nenhum dos elementos pertencer à cauda associada.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |[MagicNo]|
+           \ar[d]_-{|anaList h|}
+&
+    |1 + (MagicNo >< [MagicNo]) >< [MagicNo]|
+           \ar[d]^{|id + id >< (anaList g)|}
+           \ar[l]_-{|h|}
+\\
+     |[MagicNo >< [MagicNo]]|
+&
+     |1 + (MagicNo >< [MagicNo]) >< [MagicNo >< [MagicNo]]|
+           \ar[l]^-{|inList|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |[MagicNo]|
+           \ar[d]_-{|outList|}
+           \ar[r]^-{|h|}
+&
+     |1 + (MagicNo >< [MagicNo]) >< [MagicNo >< [MagicNo]]|
+\\
+    |1 + MagicNo >< [MagicNo]|
+           \ar[ur]^-{|id + id >< (anaList g)|}
+}
+\end{eqnarray*}
+
+\begin{code}
 
 belongs :: Eq a => (a, [a]) -> Bool
 belongs = uncurry elem
 
-isValidMagicNr = not . (any belongs) . (anaList ((id -|- (split id snd)) . outList)) . allMagicNos
+isValidMagicNr = not . (any belongs) . (anaList h) . allMagicNos
+    where h = (id -|- (split id snd)) . outList
 
 \end{code}
 
@@ -1071,10 +1177,11 @@ nwCell (Block nw ne sw se) i j = nwCell nw (i + x2) (j + y3)
 
 -- implementar com combinadores
 compressQTreeAux n (Block nw ne sw se) =
-    if (n >= 0)
+    if (n > 0)
     then Block (f (n-1) nw) (f (n-1) ne) (f (n-1) sw) (f (n-1) se)
     else nwCell (Block nw ne sw se) 0 0
         where f = compressQTreeAux
+
 compressQTreeAux n (Cell a x y) = Cell a x y
 
 compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
@@ -1348,7 +1455,7 @@ drawPTree t = animation
 \subsection*{Problema 5}
 
 \begin{code}
-singletonbag = undefined
+singletonbag = B . singl . (split id (const 1))
 muB = undefined
 dist = undefined
 \end{code}

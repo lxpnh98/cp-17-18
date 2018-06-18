@@ -36,30 +36,21 @@
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {map}|hyperpage}{11}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{11}
 \indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{11}
-\indexentry{Combinador ``pointfree''!\emph  {cata}|hyperpage}{11}
-\indexentry{Combinador ``pointfree''!\emph  {cata}|hyperpage}{11}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{11}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{11}
-\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{11}
-\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{11}
-\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{11}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{11}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{11}
 \indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {uncurry}|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
+\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{12}
+\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{12}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
-\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{12}
+<<<<<<< HEAD
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{12}
 \indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{13}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{13}
@@ -158,6 +149,23 @@
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{14}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{14}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{14}
+=======
+\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{12}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {uncurry}|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{13}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{13}
+\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{14}
+>>>>>>> a5676182e1567aa077ba30f2182da33df60baa13
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{14}
 \indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{14}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{14}
@@ -192,6 +200,7 @@
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{14}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{14}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{14}
+<<<<<<< HEAD
 \indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{14}
 \indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{15}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{15}
@@ -221,6 +230,19 @@
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{16}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{16}
 \indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{16}
+=======
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {uncurry}|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {uncurry}|hyperpage}{14}
+\indexentry{Combinador ``pointfree''!\emph  {either}|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!\emph  {succ}|hyperpage}{14}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{15}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{15}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _1$|hyperpage}{15}
+\indexentry{Fun\IeC {\c c}\IeC {\~a}o!$\pi _2$|hyperpage}{15}
+>>>>>>> a5676182e1567aa077ba30f2182da33df60baa13
 \indexentry{N\IeC {\'u}meros naturais ($I\mskip -\thinmuskip \mskip -\thinmuskip N$)|hyperpage}{16}
 \indexentry{Combinador ``pointfree''!\emph  {cata}|hyperpage}{16}
 \indexentry{N\IeC {\'u}meros naturais ($I\mskip -\thinmuskip \mskip -\thinmuskip N$)|hyperpage}{16}
