@@ -9,7 +9,7 @@
 %================= lhs2tex=====================================================%
 %include polycode.fmt
 %format (div (x)(y)) = x "\div " y
-%format succ = "\succ "
+%%format succ = "\succ "
 %format ==> = "\Longrightarrow "
 %format map = "\map "
 %format length = "\length "
@@ -1207,7 +1207,7 @@ outlineQTree p = qt2bm . (outlineQTreeAux p)
 \begin{code}
 -- Converter as definições de fk, lk, g e s para a forma da regra 50 e aplicar a regra 51 a <fk,lk> e <g,s>
 -- Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop
-base = tuploaux . (split (split (const 1) (+ 1)) (split (const 1) (const 1)))
+base = tuploaux . (split (split (const 1) succ) (split (const 1) (const 1)))
 loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
 
 -- Funções auxiliar para conversão de tipos
@@ -1219,6 +1219,7 @@ paresaux (x, y, w ,z) = ((x, y),(w, z))
 \end{code}
 
 Conversão de f k:
+
 \begin{eqnarray*}
 \start
         |lcbr(
@@ -1226,25 +1227,22 @@ Conversão de f k:
   )(
     f k (d + 1) = (d + k  + 1) * f k d
   )|
-%
 \just\equiv{ Igualdade extensional, (d + k  + 1) = l k d}
-%
         |lcbr(
     f k . (const 0) = (const 1)
   )(
     f k . succ = mul (split (f k) (l k))
   )|
 \just\equiv{ Eq-+ }
-%
 |either (f k . (const 0)) (f k . succ) = either (const 1) (mul (split (f k) (l k)))|
 \just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
-%
 |f k . in = (either (const 1) (mul)) . (id + (split (f k) (l k)))|
 \just\equiv{ F f = (id + f)}
-%
 |f k . in = (either (const 1) (mul)) . F (split (f k) (l k))|
 \end{eqnarray*}
+
 Conversão de l k:
+
 \begin{eqnarray*}
 \start
         |lcbr(
@@ -1270,7 +1268,9 @@ Conversão de l k:
 %
 |l k . in = (either (succ . k) (succ . p2)) . F (split (f k) (l k))|
 \end{eqnarray*}
+
 Conversão de g:
+
 \begin{eqnarray*}
 \start
         |lcbr(
@@ -1296,7 +1296,9 @@ Conversão de g:
 %
 |g . in = (either (const 1) (mul)) . F (split g s)|
 \end{eqnarray*}
+
 Conversão de s:
+
 \begin{eqnarray*}
 \start
         |lcbr(
@@ -1322,7 +1324,9 @@ Conversão de s:
 %
 |s . in = (either (const 1) (succ . p2)) . F (split g s)|
 \end{eqnarray*}
+
 Aplicando a lei da recursividade múltipla para |split (f k) (l k)|:
+
 \begin{eqnarray*}
 \start
         |lcbr(
@@ -1335,7 +1339,9 @@ Aplicando a lei da recursividade múltipla para |split (f k) (l k)|:
 %
 |split (f k) (l k) = cata (split (either (const 1) (mul)) (either (succ . k) (succ . p2)))|
 \end{eqnarray*}
+
 Aplicando a lei da recursividade múltipla para |split g s|:
+
 \begin{eqnarray*}
 \start
         |lcbr(
@@ -1348,7 +1354,9 @@ Aplicando a lei da recursividade múltipla para |split g s|:
 %
 |split g s = cata (split (either (const 1) (mul)) (either (const 1) (succ . p2))|
 \end{eqnarray*}
+
 Combinação dos resultados:
+
 \begin{eqnarray*}
 \start
 |cata ((((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (F p1)(F p2))|
@@ -1365,7 +1373,9 @@ Combinação dos resultados:
 %
 |cata (split (((either (const 1) (mul.p1)),(either (succ.k) (succ.p2.p1)))) (((either (const 1) (mul.p2)),(either (const 1) (succ.p2.p2))))|
 \end{eqnarray*}
+
 Dedução de base e loop:
+
 \begin{eqnarray*}
 \start
 |for loop base = cata (split ((either (const 1) (mul.p1)),(either (succ) (succ.p2.p1))) ((either (const 1) (mul.p2)),(either (const 1) (succ.p2.p2))))|
@@ -1377,12 +1387,11 @@ Dedução de base e loop:
 \just\equiv{ cata f = cata g => f = g; Ep-+ }
 %
         |lcbr(
-    (const base) = split (split (const 1) (succ)) (split (const 1) (const 1))
+    (const base) = split (split (const 1) (+1)) (split (const 1) (const 1))
   )(
     loop = split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))
   )|
 \end{eqnarray*}
-
 \subsection*{Problema 4}
 
 \begin{code}

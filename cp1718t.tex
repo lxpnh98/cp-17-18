@@ -266,6 +266,7 @@
 \makeatother
 \EndFmtInput
 %
+%%format succ = "\succ "
 \def\ana#1{\mathopen{[\!(}#1\mathclose{)\!]}}
 
 %---------------------------------------------------------------------------
@@ -1647,9 +1648,9 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \\
 \>[B]{}\mbox{\onelinecomment  Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop}{}\<[E]%
 \\
-\>[B]{}\Varid{base}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\underline{\mathrm{1}}}{\mathbin{+}\mathrm{1}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{}\<[E]%
+\>[B]{}\Varid{base}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{}\<[E]%
 \\
-\>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\succ \comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\mbox{\onelinecomment  Funções auxiliar para conversão de tipos}{}\<[E]%
 \\
@@ -1664,52 +1665,52 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \end{hscode}\resethooks
 
 Conversão de f k:
+
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\;\mathrm{0}\mathrel{=}\mathrm{1}\\\Varid{f}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}(\Varid{d}\mathbin{+}\Varid{k}\mathbin{+}\mathrm{1})\mathbin{*}\Varid{f}\;\Varid{k}\;\Varid{d}\end{lcbr}}
-%
 \just\equiv{ Igualdade extensional, (d + k  + 1) = l k d}
-%
-        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{f}\;\Varid{k}\comp \succ \mathrel{=}\Varid{mul}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{f}\;\Varid{k}\comp \Varid{succ}\mathrel{=}\Varid{mul}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
 \just\equiv{ Eq-+ }
-%
-\ensuremath{\alt{\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{f}\;\Varid{k}\comp \succ }\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}}
+\ensuremath{\alt{\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{f}\;\Varid{k}\comp \Varid{succ}}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}}
 \just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
-%
 \ensuremath{\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})}
 \just\equiv{ F f = (id + f)}
-%
 \ensuremath{\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
 \end{eqnarray*}
+
 Conversão de l k:
+
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\;\mathrm{0}\mathrel{=}\Varid{k}\mathbin{+}\mathrm{1}\\\Varid{l}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{l}\;\Varid{k}\;\Varid{d}\mathbin{+}\mathrm{1}\end{lcbr}}
 %
 \just\equiv{ Igualdade extensional, Cancelamento-x }
 %
-        \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\succ \comp \Varid{k}\\\Varid{l}\;\Varid{k}\comp \succ \mathrel{=}\succ \comp \p2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\Varid{succ}\comp \Varid{k}\\\Varid{l}\;\Varid{k}\comp \Varid{succ}\mathrel{=}\Varid{succ}\comp \p2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
 \just\equiv{ Eq-+ }
 %
-\ensuremath{\alt{\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{l}\;\Varid{k}\comp \succ }\mathrel{=}\alt{\succ \comp \Varid{k}}{\succ \comp \p2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}}
+\ensuremath{\alt{\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{l}\;\Varid{k}\comp \Varid{succ}}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}}
 \just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
 %
-\ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\succ \comp \Varid{k}}{\succ \comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})}
+\ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})}
 \just\equiv{ F f = (id + f)}
 %
-\ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\succ \comp \Varid{k}}{\succ \comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
+\ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
 \end{eqnarray*}
+
 Conversão de g:
+
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{g}\;\mathrm{0}\mathrel{=}\mathrm{1}\\\Varid{g}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}(\Varid{d}\mathbin{+}\mathrm{1})\mathbin{*}\Varid{g}\;\Varid{d}\end{lcbr}}
 %
 \just\equiv{ Igualdade extensional, (d + 1) = s d}
 %
-        \ensuremath{\begin{lcbr}\Varid{g}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{g}\comp \succ \mathrel{=}\Varid{mul}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{g}\comp \Varid{succ}\mathrel{=}\Varid{mul}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
 \just\equiv{ Eq-+ }
 %
-\ensuremath{\alt{\Varid{g}\comp \underline{\mathrm{0}}}{\Varid{g}\comp \succ }\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}\;\conj{\Varid{g}}{\Varid{s}}}}
+\ensuremath{\alt{\Varid{g}\comp \underline{\mathrm{0}}}{\Varid{g}\comp \Varid{succ}}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}\;\conj{\Varid{g}}{\Varid{s}}}}
 \just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
 %
 \ensuremath{\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}}}
@@ -1717,73 +1718,82 @@ Conversão de g:
 %
 \ensuremath{\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}}
 \end{eqnarray*}
+
 Conversão de s:
+
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{s}\;\mathrm{0}\mathrel{=}\mathrm{1}\\\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{s}\;\Varid{d}\mathbin{+}\mathrm{1}\end{lcbr}}
 %
 \just\equiv{ Igualdade extensional, Cancelamento-x }
 %
-        \ensuremath{\begin{lcbr}\Varid{s}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{s}\comp \succ \mathrel{=}\succ \comp \p2\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{s}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{s}\comp \Varid{succ}\mathrel{=}\Varid{succ}\comp \p2\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
 \just\equiv{ Eq-+ }
 %
-\ensuremath{\alt{\Varid{s}\comp \underline{\mathrm{0}}}{\Varid{s}\comp \succ }\mathrel{=}\alt{\underline{\mathrm{1}}}{\succ \comp \p2\comp \conj{\Varid{g}}{\Varid{s}}}}
+\ensuremath{\alt{\Varid{s}\comp \underline{\mathrm{0}}}{\Varid{s}\comp \Varid{succ}}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2\comp \conj{\Varid{g}}{\Varid{s}}}}
 \just\equiv{ Fusão-+, in = [\underline{0}, succ] , Absorção-+}
 %
-\ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\succ \comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}})}
+\ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}})}
 \just\equiv{ F f = (id + f)}
 %
-\ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\succ \comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}}
+\ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}}
 \end{eqnarray*}
+
 Aplicando a lei da recursividade múltipla para \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}:
+
 \begin{eqnarray*}
 \start
-        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\\\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\succ \comp \Varid{k}}{\succ \comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\\\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
 %
 \just\equiv{ Fokkinga }
 %
-\ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\mathrel{=}\Varid{cata}\;\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\succ \comp \Varid{k}}{\succ \comp \p2}}}
+\ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\mathrel{=}\Varid{cata}\;\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}}}
 \end{eqnarray*}
+
 Aplicando a lei da recursividade múltipla para \ensuremath{\conj{\Varid{g}}{\Varid{s}}}:
+
 \begin{eqnarray*}
 \start
-        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\\\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\succ \comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}))}
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\\\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}))}
 %
 \just\equiv{ Fokkinga }
 %
-\ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}\Varid{cata}\;\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2}}}
+\ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}\Varid{cata}\;\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}}}
 \end{eqnarray*}
+
 Combinação dos resultados:
+
 \begin{eqnarray*}
 \start
-\ensuremath{\Varid{cata}\;(((\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\succ \comp \Varid{k}}{\succ \comp \p2})\times(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\succ \comp \p2}))\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2})}
+\ensuremath{\Varid{cata}\;(((\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\times(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}))\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2})}
 %
 \just\equiv{ Ff = (id + f); Absorção-x }
 %
-\ensuremath{\Varid{cata}\;\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\succ \comp \Varid{k}}{\succ \comp \p2})\comp (\Varid{id}\mathbin{+}\p1)}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\succ \comp \p2})\comp (\Varid{id}\mathbin{+}\p2)}}
+\ensuremath{\Varid{cata}\;\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p1)}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p2)}}
 %
 \just\equiv{ Fusão-x }
 %
-\ensuremath{\Varid{cata}\;\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\p1),\alt{\succ \comp \Varid{k}}{\succ \comp \p2})\comp (\Varid{id}\mathbin{+}\p1)}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\p2),\alt{\underline{\mathrm{1}}}{\succ \comp \p2})\comp (\Varid{id}\mathbin{+}\p2)}}
+\ensuremath{\Varid{cata}\;\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\p1),\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p1)}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\p2),\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p2)}}
 %
 \just\equiv{ Absorção-+ (x4); Natural-id (x2) }
 %
-\ensuremath{\Varid{cata}\;\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1},\alt{\succ \comp \Varid{k}}{\succ \comp \p2\comp \p1})}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2},\alt{\underline{\mathrm{1}}}{\succ \comp \p2\comp \p2})}}
+\ensuremath{\Varid{cata}\;\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2\comp \p1})}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2\comp \p2})}}
 \end{eqnarray*}
+
 Dedução de base e loop:
+
 \begin{eqnarray*}
 \start
-\ensuremath{\mathsf{for}\ \Varid{loop}\ \Varid{base}\mathrel{=}\Varid{cata}\;\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1},\alt{\succ }{\succ \comp \p2\comp \p1}}{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2},\alt{\underline{\mathrm{1}}}{\succ \comp \p2\comp \p2}}}
+\ensuremath{\mathsf{for}\ \Varid{loop}\ \Varid{base}\mathrel{=}\Varid{cata}\;\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1},\alt{\Varid{succ}}{\Varid{succ}\comp \p2\comp \p1}}{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2\comp \p2}}}
 %
 \just\equiv{ for b i = cata ([\underline{i},b]); Lei da troca (x3) }
 %
-\ensuremath{\Varid{cata}\;\alt{\underline{\Varid{base}}}{\Varid{loop}}\mathrel{=}\Varid{cata}\;\alt{\conj{\conj{\underline{\mathrm{1}}}{\succ }}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\succ \comp \p2\comp \p2}}}}
+\ensuremath{\Varid{cata}\;\alt{\underline{\Varid{base}}}{\Varid{loop}}\mathrel{=}\Varid{cata}\;\alt{\conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}}}
 %
 \just\equiv{ cata f = cata g => f = g; Ep-+ }
 %
-        \ensuremath{\begin{lcbr}\underline{\Varid{base}}\mathrel{=}\conj{\conj{\underline{\mathrm{1}}}{\succ }}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\succ \comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\succ \comp \p2\comp \p2}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\underline{\Varid{base}}\mathrel{=}\conj{\conj{\underline{\mathrm{1}}}{\mathbin{+}\mathrm{1}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\end{lcbr}}
 \end{eqnarray*}
-
 \subsection*{Problema 4}
 
 \begin{hscode}\SaveRestoreHook
@@ -1820,7 +1830,7 @@ Dedução de base e loop:
 \\[\blanklineskip]%
 \>[B]{}\mbox{\onelinecomment  generatePTree}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;((\underline{\mathrm{1.0}}+\conj{(\Varid{sqrt}\;(\mathrm{2})\mathbin{\uparrow})\comp \succ }{\conj{\Varid{id}}{\Varid{id}}})\comp \Varid{outNat}){}\<[E]%
+\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;((\underline{\mathrm{1.0}}+\conj{(\Varid{sqrt}\;(\mathrm{2})\mathbin{\uparrow})\comp \Varid{succ}}{\conj{\Varid{id}}{\Varid{id}}})\comp \Varid{outNat}){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\mbox{\onelinecomment  drawPTree}{}\<[E]%
 \\[\blanklineskip]%
