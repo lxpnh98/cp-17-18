@@ -60,6 +60,7 @@
 %format LTree = "\mathsf{LTree}"
 %format inNat = "\mathsf{in}"
 %format (cataNat (g)) = "\cata{" g "}"
+%format (cata (g)) = "\cata{" g "}"
 %format Nat0 = "\N_0"
 %format muB = "\mu "
 %format (frac (n)(m)) = "\frac{" n "}{" m "}"
@@ -1227,7 +1228,7 @@ Conversão de f k:
   )(
     f k (d + 1) = (d + k  + 1) * f k d
   )|
-\just\equiv{ Igualdade extensional, (d + k  + 1) = l k d}
+\just\equiv{ Igualdade extensional; (d + k  + 1) = l k d}
         |lcbr(
     f k . (const 0) = (const 1)
   )(
@@ -1235,7 +1236,7 @@ Conversão de f k:
   )|
 \just\equiv{ Eq-+ }
 |either (f k . (const 0)) (f k . succ) = either (const 1) (mul (split (f k) (l k)))|
-\just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
+\just\equiv{ Fusão-+; in = |either (const 0) (succ)| ; Absorção-+}
 |f k . in = (either (const 1) (mul)) . (id + (split (f k) (l k)))|
 \just\equiv{ F f = (id + f)}
 |f k . in = (either (const 1) (mul)) . F (split (f k) (l k))|
@@ -1251,7 +1252,7 @@ Conversão de l k:
     l k (d + 1) = l k d + 1
   )|
 %
-\just\equiv{ Igualdade extensional, Cancelamento-x }
+\just\equiv{ Igualdade extensional; Cancelamento-x }
 %
         |lcbr(
     l k . (const 0) = succ . k
@@ -1261,7 +1262,7 @@ Conversão de l k:
 \just\equiv{ Eq-+ }
 %
 |either (l k . (const 0)) (l k . succ) = either (succ . k) (succ . p2 . (split (f k) (l k)))|
-\just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
+\just\equiv{ Fusão-+; in = |either (const 0) (succ)| ; Absorção-+}
 %
 |l k . in = (either (succ . k) (succ . p2)) . (id + (split (f k) (l k)))|
 \just\equiv{ F f = (id + f)}
@@ -1279,7 +1280,7 @@ Conversão de g:
     g (d + 1) = (d + 1) * g d
   )|
 %
-\just\equiv{ Igualdade extensional, (d + 1) = s d}
+\just\equiv{ Igualdade extensional; (d + 1) = s d}
 %
         |lcbr(
     g . (const 0) = (const 1)
@@ -1289,7 +1290,7 @@ Conversão de g:
 \just\equiv{ Eq-+ }
 %
 |either (g . (const 0)) (g . succ) = either (const 1) (mul (split g s))|
-\just\equiv{ Fusão-+,in = [\underline{0}, succ], Absorção-+}
+\just\equiv{ Fusão-+;  in = |either (const 0) (succ)| ; Absorção-+}
 %
 |g . in = (either (const 1) (mul)) . (id + (split g s)|
 \just\equiv{ F f = (id + f)}
@@ -1307,7 +1308,7 @@ Conversão de s:
     s (d + 1) = s d + 1
   )|
 %
-\just\equiv{ Igualdade extensional, Cancelamento-x }
+\just\equiv{ Igualdade extensional; Cancelamento-x }
 %
         |lcbr(
     s . (const 0) = (const 1)
@@ -1317,7 +1318,7 @@ Conversão de s:
 \just\equiv{ Eq-+ }
 %
 |either (s . (const 0)) (s . succ) = either (const 1) (succ . p2 . (split g s))|
-\just\equiv{ Fusão-+, in = [\underline{0}, succ] , Absorção-+}
+\just\equiv{ Fusão-+; in = |either (const 0) (succ)| ; Absorção-+}
 %
 |s . in = (either (const 1) (succ . p2)) . (id + (split g s))|
 \just\equiv{ F f = (id + f)}
@@ -1359,7 +1360,11 @@ Combinação dos resultados:
 
 \begin{eqnarray*}
 \start
-|cata ((((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (F p1)(F p2))|
+|split (cata((either (const 1) (mul)),(either (succ . k) (succ . p2)))) (cata((either (const 1) (mul)),(either (const 1) (succ . p2))))|
+%
+\just\equiv{ "Banana-split" }
+%
+|cata (((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (F p1)(F p2)|
 %
 \just\equiv{ Ff = (id + f); Absorção-x }
 %
@@ -1378,16 +1383,16 @@ Dedução de base e loop:
 
 \begin{eqnarray*}
 \start
-|for loop base = cata (split ((either (const 1) (mul.p1)),(either (succ) (succ.p2.p1))) ((either (const 1) (mul.p2)),(either (const 1) (succ.p2.p2))))|
+|for loop base = cata (split (split (either (const 1) (mul.p1)) (either (succ) (succ.p2.p1))) (split (either (const 1) (mul.p2)) (either (const 1) (succ.p2.p2))))|
 %
-\just\equiv{ for b i = cata ([\underline{i},b]); Lei da troca (x3) }
+\just\equiv{ for b i = |cata (either (const i) (b))|; Lei da troca (x3) }
 %
-|cata (either (const base)(loop)) = cata (either (split (split (const 1) (succ)) (split (const 1) (const 1))) (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))))|
+|cata (either base loop) = cata (either (split (split (const 1) (succ)) (split (const 1) (const 1))) (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))))|
 %
-\just\equiv{ cata f = cata g => f = g; Ep-+ }
+\just\equiv{ |cata f| = |cata g| |==| f = g ; Eq-+ }
 %
         |lcbr(
-    (const base) = split (split (const 1) (+1)) (split (const 1) (const 1))
+    base = split (split (const 1) (+1)) (split (const 1) (const 1))
   )(
     loop = split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))
   )|
