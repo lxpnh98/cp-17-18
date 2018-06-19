@@ -1140,10 +1140,10 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \xymatrix@@C=2cm{
     |[MagicNo]|
            \ar[d]_-{|anaList h|}
+           \ar[r]_-{|h|}
 &
     |1 + (MagicNo >< [MagicNo]) >< [MagicNo]|
-           \ar[d]^{|id + id >< (anaList g)|}
-           \ar[l]_-{|h|}
+           \ar[d]^{|id + id >< (anaList h)|}
 \\
      |[MagicNo >< [MagicNo]]|
 &
@@ -1153,15 +1153,15 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \end{eqnarray*}
 
 \begin{eqnarray*}
-\xymatrix@@C=2cm{
+\xymatrix@@C=1cm{
     |[MagicNo]|
-           \ar[d]_-{|outList|}
-           \ar[r]^-{|h|}
-&
+           \ar[dr]_-{|outList|}
+           \ar[rr]^-{|h|}
+&&
      |1 + (MagicNo >< [MagicNo]) >< [MagicNo >< [MagicNo]]|
-\\
+\\&
     |1 + MagicNo >< [MagicNo]|
-           \ar[ur]^-{|id + split (id snd)|}
+           \ar[ur]^-{|id + split id snd|}
 }
 \end{eqnarray*}
 
@@ -1197,12 +1197,80 @@ instance Functor QTree where
     fmap f = cataQTree (inQTree . (baseQTree f id))
 \end{code}
 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |B(X,Y)| = |A >< (Int >< Int) + Y >< (Y >< (Y >< Y))|
+}
+\end{eqnarray*}
+
 \subsubsection*{1 a) - rotateQTree}
+
+Para rodar uma QTree 90 graus, é preciso rodar cada célula 90 graus, e recursivamente reposicionar os ramos da árvore. Esta operação é um anamorfismo do próprio tipo.
+
+A operação de rotação de uma célula apenas troca as suas coordenadas, já que a célula representa um conjunto de pixeis (neste caso) todos com o mesmo valor.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |A >< (B >< C)|
+        \ar[r]_-{|id >< swap|}
+&
+    |A >< (C >< B)|
+}
+\end{eqnarray*}
 
 \begin{code}
 rotateCell = id >< swap
+\end{code}
+
+A operação de rotação de um conjunto de ramos implica a troca de posição entre eles.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |A >< (B >< (C >< D))|
+        \ar[r]_-{|rotateBlock|}
+&
+    |C >< (A >< (D >< B))|
+}
+\end{eqnarray*}
+
+\begin{code}
 rotateBlock = split (fst . snd . snd) (split fst (split (snd . snd . snd) (fst . snd)))
-rotateQTree = anaQTree ((rotateCell -|- rotateBlock) . outQTree)
+\end{code}
+
+Assim, temos o seguinte anamorfismo de QTrees:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|anaList h|}
+           \ar[r]_-{|h|}
+&
+    |B(A,QTree A)|
+           \ar[d]^{|B(id,anaQTree h)|}
+\\
+     |QTree A|
+&
+     |B(A,QTree A)|
+           \ar[l]^-{|inQTree|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2.5cm{
+    |QTree A|
+           \ar[dr]_-{|outQTree|}
+           \ar[rr]^-{|h|}
+&&
+    |B(A,QTree A)|
+\\&
+    |B(A,QTree A)|
+           \ar[ur]_-{|rotateCell + rotateBlock|}
+}
+\end{eqnarray*}
+
+\begin{code}
+rotateQTree = anaQTree h
+    where h = (rotateCell -|- rotateBlock) . outQTree
 \end{code}
 
 \subsubsection*{1 b) - scaleQTree}

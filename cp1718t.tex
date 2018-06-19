@@ -1520,10 +1520,10 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \xymatrix@C=2cm{
     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
            \ar[d]_-{\ensuremath{\Varid{anaList}\;\Varid{h}}}
+           \ar[r]_-{\ensuremath{\Varid{h}}}
 &
     \ensuremath{\mathrm{1}\mathbin{+}(\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{anaList}\;\Varid{g})}}
-           \ar[l]_-{\ensuremath{\Varid{h}}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{anaList}\;\Varid{h})}}
 \\
      \ensuremath{[\mskip1.5mu \Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]\mskip1.5mu]}
 &
@@ -1533,15 +1533,15 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \end{eqnarray*}
 
 \begin{eqnarray*}
-\xymatrix@C=2cm{
+\xymatrix@C=1cm{
     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[d]_-{\ensuremath{\Varid{outList}}}
-           \ar[r]^-{\ensuremath{\Varid{h}}}
-&
+           \ar[dr]_-{\ensuremath{\Varid{outList}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}}}
+&&
      \ensuremath{\mathrm{1}\mathbin{+}(\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\times[\mskip1.5mu \Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]\mskip1.5mu]}
-\\
+\\&
     \ensuremath{\mathrm{1}\mathbin{+}\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[ur]^-{\ensuremath{\Varid{id}\mathbin{+}\conj{\Varid{id}\;\p2}{\cdot }}}
+           \ar[ur]^-{\ensuremath{\Varid{id}\mathbin{+}\conj{\Varid{id}}{\p2}}}
 }
 \end{eqnarray*}
 
@@ -1597,16 +1597,91 @@ A definição dos combinadores para o tipo QTree.
 \ColumnHook
 \end{hscode}\resethooks
 
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\mathit B\;(\Conid{X},\Conid{Y})} = \ensuremath{\Conid{A}\times(\Conid{Int}\times\Conid{Int})\mathbin{+}\Conid{Y}\times(\Conid{Y}\times(\Conid{Y}\times\Conid{Y}))}
+}
+\end{eqnarray*}
+
 \subsubsection*{1 a) - rotateQTree}
+
+Para rodar uma QTree 90 graus, é preciso rodar cada célula 90 graus, e recursivamente reposicionar os ramos da árvore. Esta operação é um anamorfismo do próprio tipo.
+
+A operação de rotação de uma célula apenas troca as suas coordenadas, já que a célula representa um conjunto de pixeis (neste caso) todos com o mesmo valor.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{A}\times(\mathit B\times\mathit C)}
+        \ar[r]_-{\ensuremath{\Varid{id}\times\Varid{swap}}}
+&
+    \ensuremath{\Conid{A}\times(\mathit C\times\mathit B)}
+}
+\end{eqnarray*}
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateCell}\mathrel{=}\Varid{id}\times\Varid{swap}{}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+A operação de rotação de um conjunto de ramos implica a troca de posição entre eles.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{A}\times(\mathit B\times(\mathit C\times\Conid{D}))}
+        \ar[r]_-{\ensuremath{\Varid{rotateBlock}}}
+&
+    \ensuremath{\mathit C\times(\Conid{A}\times(\Conid{D}\times\mathit B))}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateBlock}\mathrel{=}\conj{\p1\comp \p2\comp \p2}{\conj{\p1}{\conj{\p2\comp \p2\comp \p2}{\p1\comp \p2}}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Assim, temos o seguinte anamorfismo de QTrees:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{anaList}\;\Varid{h}}}
+           \ar[r]_-{\ensuremath{\Varid{h}}}
+&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[d]^{\ensuremath{\mathit B\;(\Varid{id},\Varid{anaQTree}\;\Varid{h})}}
 \\
-\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{anaQTree}\;((\Varid{rotateCell}+\Varid{rotateBlock})\comp \Varid{outQTree}){}\<[E]%
+     \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+     \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[l]^-{\ensuremath{\Varid{inQTree}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2.5cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[dr]_-{\ensuremath{\Varid{outQTree}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}}}
+&&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+\\&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[ur]_-{\ensuremath{\Varid{rotateCell}\mathbin{+}\Varid{rotateBlock}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{anaQTree}\;\Varid{h}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{h}\mathrel{=}(\Varid{rotateCell}+\Varid{rotateBlock})\comp \Varid{outQTree}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
