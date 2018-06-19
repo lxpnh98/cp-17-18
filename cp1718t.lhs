@@ -1327,13 +1327,15 @@ invertQTree = fmap invertPx
 
 \subsubsection*{2 - compressQTree}
 
-\begin{code}
-nwCell (Cell a x y) i j = Cell a (x + i) (y + j)
-nwCell (Block nw ne sw se) i j = nwCell nw (i + x2) (j + y3)
-    where (Cell _ x2 _) = nwCell ne 0 0
-          (Cell _ _ y3) = nwCell sw 0 0
+Comprimir uma quadtree ao reduzir a sua profundidade em \texttt{n} níveis é equivalente a excluir todos os ramos depois de um certo nível (a profundidade atual menos \texttt{n}).
 
--- implementar com combinadores
+\begin{code}
+compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
+\end{code}
+
+A função auxiliar é uma função recursiva, e o seu primeiro argumento é decrementado a cada nível abaixo do atual. Se o argumento não for positivo e quadtree for um bloco de quadtrees, esse bloco é substituido por uma célula de igual tamanho à soma dos tamanhos dos quatro ramos.
+
+\begin{code}
 compressQTreeAux n (Block nw ne sw se) =
     if (n > 0)
     then Block (f (n-1) nw) (f (n-1) ne) (f (n-1) sw) (f (n-1) se)
@@ -1341,14 +1343,70 @@ compressQTreeAux n (Block nw ne sw se) =
         where f = compressQTreeAux
 
 compressQTreeAux n (Cell a x y) = Cell a x y
+\end{code}
 
-compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
+O algoritmo de determinação da célula que substitui o bloco caso seja necessário é também recursivo. A função mantém um acumulador do tamanho das células já consideradas, e no caso de base, retorna uma célula com a cor da célula no canto superior esquerdo do bloco original, e com o tamanho total deste. Caso contrário, soma a largura e altura da quadtree do canto inferior direito aos respetivos acumuladores, e invoca a função com os acumuladores atualizados na quadtree do canto superior esquerdo.
+
+\begin{code}
+nwCell (Cell a x y) i j = Cell a (x + i) (y + j)
+nwCell (Block nw ne sw se) i j = nwCell nw (i + x) (j + y)
+    where (Cell _ x y) = nwCell se 0 0
 \end{code}
 
 \subsubsection*{3 - outlineQTree}
 
+Para transformar uma quadtree numa matrix com o seu contorno, transforma-se primeiro esta quadtree numa quadtree com o seu contorno, e em torno produz-se a matriz pretendida.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+        \ar[d]^-{|outlineQTreeAux p|}
+\\
+    |QTree Bool|
+        \ar[d]^-{|qt2bm|}
+\\
+    |Matrix Bool|
+}
+\end{eqnarray*}
+
 \begin{code}
-outlineBlock x y = Block
+outlineQTree p = qt2bm . (outlineQTreeAux p)
+\end{code}
+
+A função auxiliar é um catamorfismo:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|cata g|}
+&
+    |B(A,QTree A)|
+           \ar[d]^-{|B(id,cata g)|}
+           \ar[l]_-{|inQTree|}
+\\
+     |QTree Bool|
+&
+     |B(A,QTree Bool|
+           \ar[l]^-{|g|}
+}
+\end{eqnarray*}
+
+\begin{code}
+outlineQTreeAux p = cataQTree g
+    where g = either (outlineCell p) (inQTree . i2)
+\end{code}
+
+A função outlineCell testa se uma célula faz parte do fundo com a função dada. Se sim, retorna um bloco de contorno (valor de True nas bordas e False no interior) com tamanho igual. Se não, retorna a mesma célula mas com o valor de False.
+
+\begin{code}
+outlineCell p (a, (x, y)) = cond p (const (outlinedBlock x y)) (const (Cell False x y)) a
+
+\end{code}
+
+% ilustração do bloco de contorno com imagem
+
+\begin{code}
+outlinedBlock x y = Block
     (Block (Cell True 1 1)
            (Cell True (x-2) 1)
            (Cell True 1 (y-2))
@@ -1356,28 +1414,9 @@ outlineBlock x y = Block
     (Cell True 1 (y-1))
     (Cell True (x-1) 1)
     (Cell True 1 1)
-
-outlineCell p (a, (x, y)) = cond p (const (outlineBlock x y)) (const (Cell False x y)) a
-outlineQTreeAux p = cataQTree (either (outlineCell p) (inQTree . i2))
-
-outlineQTree p = qt2bm . (outlineQTreeAux p)
 \end{code}
 
 \subsection*{Problema 3}
-
-\begin{code}
--- Converter as definições de fk, lk, g e s para a forma da regra 50 e aplicar a regra 51 a <fk,lk> e <g,s>
--- Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop
-base = tuploaux . (split (split (const 1) succ) (split (const 1) (const 1)))
-loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
-
--- Funções auxiliar para conversão de tipos
-tuploaux :: ((Integer, Integer),(Integer, Integer)) -> (Integer, Integer, Integer, Integer)
-tuploaux ((x, y),(w, z)) = (x, y, w ,z)
-
-paresaux :: (Integer, Integer, Integer, Integer) -> ((Integer, Integer),(Integer, Integer))
-paresaux (x, y, w ,z) = ((x, y),(w, z))
-\end{code}
 
 Conversão de f k:
 
@@ -1557,6 +1596,18 @@ Dedução de base e loop:
     loop = split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))
   )|
 \end{eqnarray*}
+
+\begin{code}
+base = tuploaux . (split (split (const 1) succ) (split (const 1) (const 1)))
+loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
+
+tuploaux :: ((Integer, Integer),(Integer, Integer)) -> (Integer, Integer, Integer, Integer)
+tuploaux ((x, y),(w, z)) = (x, y, w ,z)
+
+paresaux :: (Integer, Integer, Integer, Integer) -> ((Integer, Integer),(Integer, Integer))
+paresaux (x, y, w ,z) = ((x, y),(w, z))
+\end{code}
+
 \subsection*{Problema 4}
 
 \begin{code}

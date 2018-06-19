@@ -1731,35 +1731,42 @@ A operação de redimensionar uma imagem por um certo fator implica apenas o red
 
 \subsubsection*{1 c) - invertQTree}
 
+Inverter as cores de uma quadtree é uma operação que é feita invertendo a cor de cada pixel.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{invertPx}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a}{}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+Assim, podemos simplesmente utilizar o padrão funtor para implementar a função desejada.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;\Varid{invertPx}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \subsubsection*{2 - compressQTree}
 
+Comprimir uma quadtree ao reduzir a sua profundidade em \texttt{n} níveis é equivalente a excluir todos os ramos depois de um certo nível (a profundidade atual menos \texttt{n}).
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{compressQTreeAux}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função auxiliar é uma função recursiva, e o seu primeiro argumento é decrementado a cada nível abaixo do atual. Se o argumento não for positivo e quadtree for um bloco de quadtrees, esse bloco é substituido por uma célula de igual tamanho à soma dos tamanhos dos quatro ramos.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{nwCell}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\;\Varid{i}\;\Varid{j}\mathrel{=}\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{+}\Varid{i})\;(\Varid{y}\mathbin{+}\Varid{j}){}\<[E]%
-\\
-\>[B]{}\Varid{nwCell}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\;\Varid{i}\;\Varid{j}\mathrel{=}\Varid{nwCell}\;\Varid{nw}\;(\Varid{i}\mathbin{+}\Varid{x2})\;(\Varid{j}\mathbin{+}\Varid{y3}){}\<[E]%
-\\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;(\Conid{Cell}\;\anonymous \;\Varid{x2}\;\anonymous )\mathrel{=}\Varid{nwCell}\;\Varid{ne}\;\mathrm{0}\;\mathrm{0}{}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}(\Conid{Cell}\;\anonymous \;\anonymous \;\Varid{y3})\mathrel{=}\Varid{nwCell}\;\Varid{sw}\;\mathrm{0}\;\mathrm{0}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  implementar com combinadores}{}\<[E]%
-\\
 \>[B]{}\Varid{compressQTreeAux}\;\Varid{n}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\mathrel{=}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
@@ -1775,19 +1782,93 @@ A operação de redimensionar uma imagem por um certo fator implica apenas o red
 \>[9]{}\mathbf{where}\;\Varid{f}\mathrel{=}\Varid{compressQTreeAux}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{compressQTreeAux}\;\Varid{n}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{compressQTreeAux}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+O algoritmo de determinação da célula que substitui o bloco caso seja necessário é também recursivo. A função mantém um acumulador do tamanho das células já consideradas, e no caso de base, retorna uma célula com a cor da célula no canto superior esquerdo do bloco original, e com o tamanho total deste. Caso contrário, soma a largura e altura da quadtree do canto inferior direito aos respetivos acumuladores, e invoca a função com os acumuladores atualizados na quadtree do canto superior esquerdo.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{nwCell}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\;\Varid{i}\;\Varid{j}\mathrel{=}\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{+}\Varid{i})\;(\Varid{y}\mathbin{+}\Varid{j}){}\<[E]%
+\\
+\>[B]{}\Varid{nwCell}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\;\Varid{i}\;\Varid{j}\mathrel{=}\Varid{nwCell}\;\Varid{nw}\;(\Varid{i}\mathbin{+}\Varid{x})\;(\Varid{j}\mathbin{+}\Varid{y}){}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;(\Conid{Cell}\;\anonymous \;\Varid{x}\;\Varid{y})\mathrel{=}\Varid{nwCell}\;\Varid{se}\;\mathrm{0}\;\mathrm{0}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \subsubsection*{3 - outlineQTree}
+
+Para transformar uma quadtree numa matrix com o seu contorno, transforma-se primeiro esta quadtree numa quadtree com o seu contorno, e em torno produz-se a matriz pretendida.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+        \ar[d]^-{\ensuremath{\Varid{outlineQTreeAux}\;\Varid{p}}}
+\\
+    \ensuremath{\Conid{QTree}\;\Conid{Bool}}
+        \ar[d]^-{\ensuremath{\Varid{qt2bm}}}
+\\
+    \ensuremath{\Conid{Matrix}\;\Conid{Bool}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlineQTree}\;\Varid{p}\mathrel{=}\Varid{qt2bm}\comp (\Varid{outlineQTreeAux}\;\Varid{p}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função auxiliar é um catamorfismo:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\cata{\Varid{g}}}}
+&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[d]^-{\ensuremath{\mathit B\;(\Varid{id},\cata{\Varid{g}})}}
+           \ar[l]_-{\ensuremath{\Varid{inQTree}}}
+\\
+     \ensuremath{\Conid{QTree}\;\Conid{Bool}}
+&
+     \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{Bool}}
+           \ar[l]^-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlineQTreeAux}\;\Varid{p}\mathrel{=}\Varid{cataQTree}\;\Varid{g}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{g}\mathrel{=}\alt{\Varid{outlineCell}\;\Varid{p}}{\Varid{inQTree}\comp i_2}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função outlineCell testa se uma célula faz parte do fundo com a função dada. Se sim, retorna um bloco de contorno (valor de True nas bordas e False no interior) com tamanho igual. Se não, retorna a mesma célula mas com o valor de False.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlineCell}\;\Varid{p}\;(\Varid{a},(\Varid{x},\Varid{y}))\mathrel{=}\Varid{cond}\;\Varid{p}\;\underline{(\Varid{outlinedBlock}\;\Varid{x}\;\Varid{y})}\;\underline{(\Conid{Cell}\;\Conid{False}\;\Varid{x}\;\Varid{y})}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+% ilustração do bloco de contorno com imagem
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{outlineBlock}\;\Varid{x}\;\Varid{y}\mathrel{=}\Conid{Block}{}\<[E]%
+\>[B]{}\Varid{outlinedBlock}\;\Varid{x}\;\Varid{y}\mathrel{=}\Conid{Block}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}(\Conid{Block}\;(\Conid{Cell}\;\Conid{True}\;\mathrm{1}\;\mathrm{1})\;{}\<[E]%
@@ -1809,39 +1890,10 @@ A operação de redimensionar uma imagem por um certo fator implica apenas o red
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}(\Conid{Cell}\;\Conid{True}\;\mathrm{1}\;\mathrm{1}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{outlineCell}\;\Varid{p}\;(\Varid{a},(\Varid{x},\Varid{y}))\mathrel{=}\Varid{cond}\;\Varid{p}\;\underline{(\Varid{outlineBlock}\;\Varid{x}\;\Varid{y})}\;\underline{(\Conid{Cell}\;\Conid{False}\;\Varid{x}\;\Varid{y})}\;\Varid{a}{}\<[E]%
-\\
-\>[B]{}\Varid{outlineQTreeAux}\;\Varid{p}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{outlineCell}\;\Varid{p}}{\Varid{inQTree}\comp i_2}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{outlineQTree}\;\Varid{p}\mathrel{=}\Varid{qt2bm}\comp (\Varid{outlineQTreeAux}\;\Varid{p}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \subsection*{Problema 3}
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mbox{\onelinecomment  Converter as definições de fk, lk, g e s para a forma da regra 50 e aplicar a regra 51 a <fk,lk> e <g,s>}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment  Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop}{}\<[E]%
-\\
-\>[B]{}\Varid{base}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{}\<[E]%
-\\
-\>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  Funções auxiliar para conversão de tipos}{}\<[E]%
-\\
-\>[B]{}\Varid{tuploaux}\mathbin{::}((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer}))\to (\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer}){}\<[E]%
-\\
-\>[B]{}\Varid{tuploaux}\;((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z}))\mathrel{=}(\Varid{x},\Varid{y},\Varid{w},\Varid{z}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{paresaux}\mathbin{::}(\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer})\to ((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer})){}\<[E]%
-\\
-\>[B]{}\Varid{paresaux}\;(\Varid{x},\Varid{y},\Varid{w},\Varid{z})\mathrel{=}((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z})){}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
 
 Conversão de f k:
 
@@ -1977,6 +2029,24 @@ Dedução de base e loop:
 %
         \ensuremath{\begin{lcbr}\Varid{base}\mathrel{=}\conj{\conj{\underline{\mathrm{1}}}{\mathbin{+}\mathrm{1}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\end{lcbr}}
 \end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{base}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{}\<[E]%
+\\
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{tuploaux}\mathbin{::}((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer}))\to (\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer}){}\<[E]%
+\\
+\>[B]{}\Varid{tuploaux}\;((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z}))\mathrel{=}(\Varid{x},\Varid{y},\Varid{w},\Varid{z}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{paresaux}\mathbin{::}(\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer})\to ((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer})){}\<[E]%
+\\
+\>[B]{}\Varid{paresaux}\;(\Varid{x},\Varid{y},\Varid{w},\Varid{z})\mathrel{=}((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
 \subsection*{Problema 4}
 
 \begin{hscode}\SaveRestoreHook
