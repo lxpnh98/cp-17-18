@@ -1275,16 +1275,53 @@ rotateQTree = anaQTree h
 
 \subsubsection*{1 b) - scaleQTree}
 
+A operação de redimensionar uma imagem por um certo fator implica apenas o redimensionamente de cada célula por esse mesmo fator. Trata-se de um anamorfismo, pois o resultado necessita de mais informação do que o conteúdo de cada célula (o seu tamanho atual).
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|anaList (h s)|}
+           \ar[r]_-{|h s|}
+&
+    |B(A,QTree A)|
+           \ar[d]^{|B(id,anaQTree (h s))|}
+\\
+     |QTree A|
+&
+     |B(A,QTree A)|
+           \ar[l]^-{|inQTree|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2.5cm{
+    |QTree A|
+           \ar[dr]_-{|outQTree|}
+           \ar[rr]^-{|h s|}
+&&
+    |B(A,QTree A)|
+\\&
+    |B(A,QTree A)|
+           \ar[ur]_-{|id >< ((*s) >< (*s)) + id|}
+}
+\end{eqnarray*}
+
 \begin{code}
-scaleCell k (Cell a x y) = outQTree (Cell a (x*k) (y*k))
-scaleCell _ b = outQTree b
-scaleQTree k = anaQTree (scaleCell k)
+scaleQTree s = anaQTree (h s)
+    where h s = ((id >< ((*s) >< (*s))) -|- id) . outQTree
 \end{code}
 
 \subsubsection*{1 c) - invertQTree}
 
+Inverter as cores de uma quadtree é uma operação que é feita invertendo a cor de cada pixel.
+
 \begin{code}
 invertPx (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
+\end{code}
+
+Assim, podemos simplesmente utilizar o padrão funtor para implementar a função desejada.
+
+\begin{code}
 invertQTree = fmap invertPx
 \end{code}
 

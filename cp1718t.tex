@@ -1687,14 +1687,45 @@ Assim, temos o seguinte anamorfismo de QTrees:
 
 \subsubsection*{1 b) - scaleQTree}
 
+A operação de redimensionar uma imagem por um certo fator implica apenas o redimensionamente de cada célula por esse mesmo fator. Trata-se de um anamorfismo, pois o resultado necessita de mais informação do que o conteúdo de cada célula (o seu tamanho atual).
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{anaList}\;(\Varid{h}\;\Varid{s})}}
+           \ar[r]_-{\ensuremath{\Varid{h}\;\Varid{s}}}
+&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[d]^{\ensuremath{\mathit B\;(\Varid{id},\Varid{anaQTree}\;(\Varid{h}\;\Varid{s}))}}
+\\
+     \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+     \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[l]^-{\ensuremath{\Varid{inQTree}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2.5cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[dr]_-{\ensuremath{\Varid{outQTree}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}\;\Varid{s}}}
+&&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+\\&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[ur]_-{\ensuremath{\Varid{id}\times((\mathbin{*}\Varid{s})\times(\mathbin{*}\Varid{s}))\mathbin{+}\Varid{id}}}
+}
+\end{eqnarray*}
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{scaleCell}\;\Varid{k}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Varid{outQTree}\;(\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{*}\Varid{k})\;(\Varid{y}\mathbin{*}\Varid{k})){}\<[E]%
+\>[B]{}\Varid{scaleQTree}\;\Varid{s}\mathrel{=}\Varid{anaQTree}\;(\Varid{h}\;\Varid{s}){}\<[E]%
 \\
-\>[B]{}\Varid{scaleCell}\;\anonymous \;\Varid{b}\mathrel{=}\Varid{outQTree}\;\Varid{b}{}\<[E]%
-\\
-\>[B]{}\Varid{scaleQTree}\;\Varid{k}\mathrel{=}\Varid{anaQTree}\;(\Varid{scaleCell}\;\Varid{k}){}\<[E]%
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{h}\;\Varid{s}\mathrel{=}((\Varid{id}\times((\mathbin{*}\Varid{s})\times(\mathbin{*}\Varid{s})))+\Varid{id})\comp \Varid{outQTree}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
