@@ -986,7 +986,7 @@ anaBlockchain h    = inBlockchain . (recBlockchain (anaBlockchain h) ) . h
 hyloBlockchain g h = cataBlockchain g . anaBlockchain h
 \end{code}
 
-\subsubsection{allTransactions}
+\subsubsection*{1 - allTransactions}
 
 A partir de um bloco, podemos obter a sua lista de transações.
 
@@ -1027,7 +1027,7 @@ allTransactions = cataBlockchain g
     where g = either getTransactions (conc . (getTransactions >< id))
 \end{code}
 
-\subsubsection{ledger}
+\subsubsection*{2 - ledger}
 
 É definido um tipo auxiliar, \texttt{Cashflow}, que representa um depósito de um certo valor na conta de uma entidade.
 
@@ -1037,10 +1037,46 @@ type Cashflow = (Entity, Value)
 
 Para construir o ledger, primeiro extrai-se todas as transações do blockchain. Depois, através de um catamorfismo, é necessário transformar a lista de transações numa lista de cashflows. Finalmente, são agregados os resultados somando todos os cashflows pertencentes à mesma entidade, também através de um catamorfismo.
 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|allTransactions|}
+\\
+    |Transactions|
+           \ar[d]_-{|cata g|}
+&
+    |1 + Transaction >< Transactions|
+           \ar[d]^{|id + id >< (cata g)|}
+           \ar[l]_-{|inList|}
+\\
+     |[Cashflow]|
+&
+     |1 + Transaction >< [Cashflow]|
+           \ar[l]^-{|g|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |[Cashflow]|
+           \ar[d]_-{|cata h|}
+&
+    |1 + Cashflow >< [Cashflow]|
+           \ar[d]^{|id + id >< (cata h)|}
+           \ar[l]_-{|inList|}
+\\
+     |Ledger|
+&
+     |1 + (Entity >< Value) >< Ledger|
+           \ar[l]^-{|h = either nil put|}
+}
+\end{eqnarray*}
+
 \begin{code}
--- implementar com combinadores
-ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))) . allTransactions
-    where f :: Transaction -> [Cashflow]
+ledger = (cataList h) . (cataList g) . allTransactions
+    where g = either nil (conc . (f >< id))
+          h = either nil put
+          f :: Transaction -> [Cashflow]
           f (e1, (v, e2)) = (e1, -v) : (e2, v) : []
           put :: (Cashflow, Ledger) -> Ledger
           put (e,[]) = [e]
@@ -1052,8 +1088,7 @@ A função auxiliar \texttt{f} converte uma transação numa lista com dois cash
 
 A função auxiliar \texttt{put} trata de atualizar o ledger com um cashflow, adicionando ao valor da entidade se já consta no ledger, ou adicionando um novo elemento à lista (uma nova entidade).
 
-
-\subsubsection{isValidMagicNr}
+\subsubsection*{3 - isValidMagicNr}
 
 Cada bloco tem o seu número mágico.
 
@@ -1126,7 +1161,7 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
      |1 + (MagicNo >< [MagicNo]) >< [MagicNo >< [MagicNo]]|
 \\
     |1 + MagicNo >< [MagicNo]|
-           \ar[ur]^-{|id + id >< (anaList g)|}
+           \ar[ur]^-{|id + split (id snd)|}
 }
 \end{eqnarray*}
 
@@ -1142,7 +1177,10 @@ isValidMagicNr = not . (any belongs) . (anaList h) . allMagicNos
 
 \subsection*{Problema 2}
 
+A definição dos combinadores para o tipo QTree.
+
 \begin{code}
+
 inQTree (Left (a,(x,y))) = Cell a x y
 inQTree (Right (a,(b,(c,d)))) = Block a b c d
 
@@ -1157,20 +1195,34 @@ baseQTree f g = (f >< id) -|- (g >< (g >< (g >< g)))
 
 instance Functor QTree where
     fmap f = cataQTree (inQTree . (baseQTree f id))
+\end{code}
 
---rotateCell (a, (x, y)) = (a, (y, x))
+\subsubsection*{1 a) - rotateQTree}
+
+\begin{code}
 rotateCell = id >< swap
---rotateBlock (nw, (ne, (sw, se))) = (sw, (nw, (se, ne)))
 rotateBlock = split (fst . snd . snd) (split fst (split (snd . snd . snd) (fst . snd)))
 rotateQTree = anaQTree ((rotateCell -|- rotateBlock) . outQTree)
+\end{code}
 
+\subsubsection*{1 b) - scaleQTree}
+
+\begin{code}
 scaleCell k (Cell a x y) = outQTree (Cell a (x*k) (y*k))
 scaleCell _ b = outQTree b
 scaleQTree k = anaQTree (scaleCell k)
+\end{code}
 
+\subsubsection*{1 c) - invertQTree}
+
+\begin{code}
 invertPx (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
 invertQTree = fmap invertPx
+\end{code}
 
+\subsubsection*{2 - compressQTree}
+
+\begin{code}
 nwCell (Cell a x y) i j = Cell a (x + i) (y + j)
 nwCell (Block nw ne sw se) i j = nwCell nw (i + x2) (j + y3)
     where (Cell _ x2 _) = nwCell ne 0 0
@@ -1186,7 +1238,11 @@ compressQTreeAux n (Block nw ne sw se) =
 compressQTreeAux n (Cell a x y) = Cell a x y
 
 compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
+\end{code}
 
+\subsubsection*{3 - outlineQTree}
+
+\begin{code}
 outlineBlock x y = Block
     (Block (Cell True 1 1)
            (Cell True (x-2) 1)
@@ -1200,7 +1256,6 @@ outlineCell p (a, (x, y)) = cond p (const (outlineBlock x y)) (const (Cell False
 outlineQTreeAux p = cataQTree (either (outlineCell p) (inQTree . i2))
 
 outlineQTree p = qt2bm . (outlineQTreeAux p)
-
 \end{code}
 
 \subsection*{Problema 3}

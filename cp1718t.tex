@@ -1328,7 +1328,7 @@ A definição dos combinadores para o Blockchain.
 \ColumnHook
 \end{hscode}\resethooks
 
-\subsubsection{allTransactions}
+\subsubsection*{1 - allTransactions}
 
 A partir de um bloco, podemos obter a sua lista de transações.
 
@@ -1379,7 +1379,7 @@ A função \textit{allTransactions} é um catamorfismo de Blockchains que tem co
 \ColumnHook
 \end{hscode}\resethooks
 
-\subsubsection{ledger}
+\subsubsection*{2 - ledger}
 
 É definido um tipo auxiliar, \texttt{Cashflow}, que representa um depósito de um certo valor na conta de uma entidade.
 
@@ -1392,17 +1392,56 @@ A função \textit{allTransactions} é um catamorfismo de Blockchains que tem co
 
 Para construir o ledger, primeiro extrai-se todas as transações do blockchain. Depois, através de um catamorfismo, é necessário transformar a lista de transações numa lista de cashflows. Finalmente, são agregados os resultados somando todos os cashflows pertencentes à mesma entidade, também através de um catamorfismo.
 
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{allTransactions}}}
+\\
+    \ensuremath{\Conid{Transactions}}
+           \ar[d]_-{\ensuremath{\cata{\Varid{g}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Transaction}\times\Conid{Transactions}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times\cata{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\Varid{inList}}}
+\\
+     \ensuremath{[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}\Conid{Transaction}\times[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+           \ar[l]^-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+           \ar[d]_-{\ensuremath{\cata{\Varid{h}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Cashflow}\times[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times\cata{\Varid{h}}}}
+           \ar[l]_-{\ensuremath{\Varid{inList}}}
+\\
+     \ensuremath{\Conid{Ledger}}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}(\Conid{Entity}\times\Conid{Value})\times\Conid{Ledger}}
+           \ar[l]^-{\ensuremath{\Varid{h}\mathrel{=}\alt{\Varid{nil}}{\Varid{put}}}}
+}
+\end{eqnarray*}
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{11}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mbox{\onelinecomment  implementar com combinadores}{}\<[E]%
-\\
-\>[B]{}\Varid{ledger}\mathrel{=}(\Varid{cataList}\;\alt{\Varid{nil}}{\Varid{put}})\comp (\Varid{cataList}\;\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{f}\times\Varid{id})})\comp \Varid{allTransactions}{}\<[E]%
+\>[B]{}\Varid{ledger}\mathrel{=}(\Varid{cataList}\;\Varid{h})\comp (\Varid{cataList}\;\Varid{g})\comp \Varid{allTransactions}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;\Varid{f}\mathbin{::}\Conid{Transaction}\to [\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]{}\<[E]%
+\>[5]{}\mathbf{where}\;\Varid{g}\mathrel{=}\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{f}\times\Varid{id})}{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{h}\mathrel{=}\alt{\Varid{nil}}{\Varid{put}}{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{f}\mathbin{::}\Conid{Transaction}\to [\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]{}\<[E]%
 \\
 \>[5]{}\hsindent{6}{}\<[11]%
 \>[11]{}\Varid{f}\;(e_1 ,(\Varid{v},e_2 ))\mathrel{=}(e_1 ,\mathbin{-}\Varid{v})\mathbin{:}(e_2 ,\Varid{v})\mathbin{:}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
@@ -1422,8 +1461,7 @@ A função auxiliar \texttt{f} converte uma transação numa lista com dois cash
 
 A função auxiliar \texttt{put} trata de atualizar o ledger com um cashflow, adicionando ao valor da entidade se já consta no ledger, ou adicionando um novo elemento à lista (uma nova entidade).
 
-
-\subsubsection{isValidMagicNr}
+\subsubsection*{3 - isValidMagicNr}
 
 Cada bloco tem o seu número mágico.
 
@@ -1503,7 +1541,7 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
      \ensuremath{\mathrm{1}\mathbin{+}(\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\times[\mskip1.5mu \Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]\mskip1.5mu]}
 \\
     \ensuremath{\mathrm{1}\mathbin{+}\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[ur]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{anaList}\;\Varid{g})}}
+           \ar[ur]^-{\ensuremath{\Varid{id}\mathbin{+}\conj{\Varid{id}\;\p2}{\cdot }}}
 }
 \end{eqnarray*}
 
@@ -1524,12 +1562,11 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 
 \subsection*{Problema 2}
 
+A definição dos combinadores para o tipo QTree.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{15}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inQTree}\;(i_1\;(\Varid{a},(\Varid{x},\Varid{y})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
@@ -1557,27 +1594,54 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathsf{fmap}\;\Varid{f}\mathrel{=}\Varid{cataQTree}\;(\Varid{inQTree}\comp (\Varid{baseQTree}\;\Varid{f}\;\Varid{id})){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment rotateCell (a, (x, y)) = (a, (y, x))}{}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{1 a) - rotateQTree}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateCell}\mathrel{=}\Varid{id}\times\Varid{swap}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment rotateBlock (nw, (ne, (sw, se))) = (sw, (nw, (se, ne)))}{}\<[E]%
 \\
 \>[B]{}\Varid{rotateBlock}\mathrel{=}\conj{\p1\comp \p2\comp \p2}{\conj{\p1}{\conj{\p2\comp \p2\comp \p2}{\p1\comp \p2}}}{}\<[E]%
 \\
 \>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{anaQTree}\;((\Varid{rotateCell}+\Varid{rotateBlock})\comp \Varid{outQTree}){}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{1 b) - scaleQTree}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{scaleCell}\;\Varid{k}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Varid{outQTree}\;(\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{*}\Varid{k})\;(\Varid{y}\mathbin{*}\Varid{k})){}\<[E]%
 \\
 \>[B]{}\Varid{scaleCell}\;\anonymous \;\Varid{b}\mathrel{=}\Varid{outQTree}\;\Varid{b}{}\<[E]%
 \\
 \>[B]{}\Varid{scaleQTree}\;\Varid{k}\mathrel{=}\Varid{anaQTree}\;(\Varid{scaleCell}\;\Varid{k}){}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{1 c) - invertQTree}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{invertPx}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a}{}\<[E]%
 \\
 \>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;\Varid{invertPx}{}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{2 - compressQTree}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{nwCell}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\;\Varid{i}\;\Varid{j}\mathrel{=}\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{+}\Varid{i})\;(\Varid{y}\mathbin{+}\Varid{j}){}\<[E]%
 \\
 \>[B]{}\Varid{nwCell}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\;\Varid{i}\;\Varid{j}\mathrel{=}\Varid{nwCell}\;\Varid{nw}\;(\Varid{i}\mathbin{+}\Varid{x2})\;(\Varid{j}\mathbin{+}\Varid{y3}){}\<[E]%
@@ -1607,7 +1671,16 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \>[B]{}\Varid{compressQTreeAux}\;\Varid{n}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{compressQTreeAux}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}{}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{3 - outlineQTree}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{outlineBlock}\;\Varid{x}\;\Varid{y}\mathrel{=}\Conid{Block}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
