@@ -986,7 +986,7 @@ anaBlockchain h    = inBlockchain . (recBlockchain (anaBlockchain h) ) . h
 hyloBlockchain g h = cataBlockchain g . anaBlockchain h
 \end{code}
 
-\subsubsection{allTransactions}
+\subsubsection*{1 - allTransactions}
 
 A partir de um bloco, podemos obter a sua lista de transações.
 
@@ -1027,7 +1027,7 @@ allTransactions = cataBlockchain g
     where g = either getTransactions (conc . (getTransactions >< id))
 \end{code}
 
-\subsubsection{ledger}
+\subsubsection*{2 - ledger}
 
 É definido um tipo auxiliar, \texttt{Cashflow}, que representa um depósito de um certo valor na conta de uma entidade.
 
@@ -1037,10 +1037,46 @@ type Cashflow = (Entity, Value)
 
 Para construir o ledger, primeiro extrai-se todas as transações do blockchain. Depois, através de um catamorfismo, é necessário transformar a lista de transações numa lista de cashflows. Finalmente, são agregados os resultados somando todos os cashflows pertencentes à mesma entidade, também através de um catamorfismo.
 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|allTransactions|}
+\\
+    |Transactions|
+           \ar[d]_-{|cata g|}
+&
+    |1 + Transaction >< Transactions|
+           \ar[d]^{|id + id >< (cata g)|}
+           \ar[l]_-{|inList|}
+\\
+     |[Cashflow]|
+&
+     |1 + Transaction >< [Cashflow]|
+           \ar[l]^-{|g|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |[Cashflow]|
+           \ar[d]_-{|cata h|}
+&
+    |1 + Cashflow >< [Cashflow]|
+           \ar[d]^{|id + id >< (cata h)|}
+           \ar[l]_-{|inList|}
+\\
+     |Ledger|
+&
+     |1 + (Entity >< Value) >< Ledger|
+           \ar[l]^-{|h = either nil put|}
+}
+\end{eqnarray*}
+
 \begin{code}
--- implementar com combinadores
-ledger = (cataList (either nil put)) . (cataList (either nil (conc . (f >< id)))) . allTransactions
-    where f :: Transaction -> [Cashflow]
+ledger = (cataList h) . (cataList g) . allTransactions
+    where g = either nil (conc . (f >< id))
+          h = either nil put
+          f :: Transaction -> [Cashflow]
           f (e1, (v, e2)) = (e1, -v) : (e2, v) : []
           put :: (Cashflow, Ledger) -> Ledger
           put (e,[]) = [e]
@@ -1052,8 +1088,7 @@ A função auxiliar \texttt{f} converte uma transação numa lista com dois cash
 
 A função auxiliar \texttt{put} trata de atualizar o ledger com um cashflow, adicionando ao valor da entidade se já consta no ledger, ou adicionando um novo elemento à lista (uma nova entidade).
 
-
-\subsubsection{isValidMagicNr}
+\subsubsection*{3 - isValidMagicNr}
 
 Cada bloco tem o seu número mágico.
 
@@ -1105,10 +1140,10 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \xymatrix@@C=2cm{
     |[MagicNo]|
            \ar[d]_-{|anaList h|}
+           \ar[r]_-{|h|}
 &
     |1 + (MagicNo >< [MagicNo]) >< [MagicNo]|
-           \ar[d]^{|id + id >< (anaList g)|}
-           \ar[l]_-{|h|}
+           \ar[d]^{|id + id >< (anaList h)|}
 \\
      |[MagicNo >< [MagicNo]]|
 &
@@ -1118,15 +1153,15 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \end{eqnarray*}
 
 \begin{eqnarray*}
-\xymatrix@@C=2cm{
+\xymatrix@@C=1cm{
     |[MagicNo]|
-           \ar[d]_-{|outList|}
-           \ar[r]^-{|h|}
-&
+           \ar[dr]_-{|outList|}
+           \ar[rr]^-{|h|}
+&&
      |1 + (MagicNo >< [MagicNo]) >< [MagicNo >< [MagicNo]]|
-\\
+\\&
     |1 + MagicNo >< [MagicNo]|
-           \ar[ur]^-{|id + id >< (anaList g)|}
+           \ar[ur]^-{|id + split id snd|}
 }
 \end{eqnarray*}
 
@@ -1142,7 +1177,10 @@ isValidMagicNr = not . (any belongs) . (anaList h) . allMagicNos
 
 \subsection*{Problema 2}
 
+A definição dos combinadores para o tipo QTree.
+
 \begin{code}
+
 inQTree (Left (a,(x,y))) = Cell a x y
 inQTree (Right (a,(b,(c,d)))) = Block a b c d
 
@@ -1157,26 +1195,147 @@ baseQTree f g = (f >< id) -|- (g >< (g >< (g >< g)))
 
 instance Functor QTree where
     fmap f = cataQTree (inQTree . (baseQTree f id))
+\end{code}
 
---rotateCell (a, (x, y)) = (a, (y, x))
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |B(X,Y)| = |A >< (Int >< Int) + Y >< (Y >< (Y >< Y))|
+}
+\end{eqnarray*}
+
+\subsubsection*{1 a) - rotateQTree}
+
+Para rodar uma QTree 90 graus, é preciso rodar cada célula 90 graus, e recursivamente reposicionar os ramos da árvore. Esta operação é um anamorfismo do próprio tipo.
+
+A operação de rotação de uma célula apenas troca as suas coordenadas, já que a célula representa um conjunto de pixeis (neste caso) todos com o mesmo valor.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |A >< (B >< C)|
+        \ar[r]_-{|id >< swap|}
+&
+    |A >< (C >< B)|
+}
+\end{eqnarray*}
+
+\begin{code}
 rotateCell = id >< swap
---rotateBlock (nw, (ne, (sw, se))) = (sw, (nw, (se, ne)))
+\end{code}
+
+A operação de rotação de um conjunto de ramos implica a troca de posição entre eles.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |A >< (B >< (C >< D))|
+        \ar[r]_-{|rotateBlock|}
+&
+    |C >< (A >< (D >< B))|
+}
+\end{eqnarray*}
+
+\begin{code}
 rotateBlock = split (fst . snd . snd) (split fst (split (snd . snd . snd) (fst . snd)))
-rotateQTree = anaQTree ((rotateCell -|- rotateBlock) . outQTree)
+\end{code}
 
-scaleCell k (Cell a x y) = outQTree (Cell a (x*k) (y*k))
-scaleCell _ b = outQTree b
-scaleQTree k = anaQTree (scaleCell k)
+Assim, temos o seguinte anamorfismo de QTrees:
 
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|anaList h|}
+           \ar[r]_-{|h|}
+&
+    |B(A,QTree A)|
+           \ar[d]^{|B(id,anaQTree h)|}
+\\
+     |QTree A|
+&
+     |B(A,QTree A)|
+           \ar[l]^-{|inQTree|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2.5cm{
+    |QTree A|
+           \ar[dr]_-{|outQTree|}
+           \ar[rr]^-{|h|}
+&&
+    |B(A,QTree A)|
+\\&
+    |B(A,QTree A)|
+           \ar[ur]_-{|rotateCell + rotateBlock|}
+}
+\end{eqnarray*}
+
+\begin{code}
+rotateQTree = anaQTree h
+    where h = (rotateCell -|- rotateBlock) . outQTree
+\end{code}
+
+\subsubsection*{1 b) - scaleQTree}
+
+A operação de redimensionar uma imagem por um certo fator implica apenas o redimensionamente de cada célula por esse mesmo fator. Trata-se de um anamorfismo, pois o resultado necessita de mais informação do que o conteúdo de cada célula (o seu tamanho atual).
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|anaList (h s)|}
+           \ar[r]_-{|h s|}
+&
+    |B(A,QTree A)|
+           \ar[d]^{|B(id,anaQTree (h s))|}
+\\
+     |QTree A|
+&
+     |B(A,QTree A)|
+           \ar[l]^-{|inQTree|}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@@C=2.5cm{
+    |QTree A|
+           \ar[dr]_-{|outQTree|}
+           \ar[rr]^-{|h s|}
+&&
+    |B(A,QTree A)|
+\\&
+    |B(A,QTree A)|
+           \ar[ur]_-{|id >< ((*s) >< (*s)) + id|}
+}
+\end{eqnarray*}
+
+\begin{code}
+scaleQTree s = anaQTree (h s)
+    where h s = ((id >< ((*s) >< (*s))) -|- id) . outQTree
+\end{code}
+
+\subsubsection*{1 c) - invertQTree}
+
+Inverter as cores de uma quadtree é uma operação que é feita invertendo a cor de cada pixel.
+
+\begin{code}
 invertPx (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
+\end{code}
+
+Assim, podemos simplesmente utilizar o padrão funtor para implementar a função desejada.
+
+\begin{code}
 invertQTree = fmap invertPx
+\end{code}
 
-nwCell (Cell a x y) i j = Cell a (x + i) (y + j)
-nwCell (Block nw ne sw se) i j = nwCell nw (i + x2) (j + y3)
-    where (Cell _ x2 _) = nwCell ne 0 0
-          (Cell _ _ y3) = nwCell sw 0 0
+\subsubsection*{2 - compressQTree}
 
--- implementar com combinadores
+Comprimir uma quadtree ao reduzir a sua profundidade em \texttt{n} níveis é equivalente a excluir todos os ramos depois de um certo nível (a profundidade atual menos \texttt{n}).
+
+\begin{code}
+compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
+\end{code}
+
+A função auxiliar é uma função recursiva, e o seu primeiro argumento é decrementado a cada nível abaixo do atual. Se o argumento não for positivo e quadtree for um bloco de quadtrees, esse bloco é substituido por uma célula de igual tamanho à soma dos tamanhos dos quatro ramos.
+
+\begin{code}
 compressQTreeAux n (Block nw ne sw se) =
     if (n > 0)
     then Block (f (n-1) nw) (f (n-1) ne) (f (n-1) sw) (f (n-1) se)
@@ -1184,10 +1343,70 @@ compressQTreeAux n (Block nw ne sw se) =
         where f = compressQTreeAux
 
 compressQTreeAux n (Cell a x y) = Cell a x y
+\end{code}
 
-compressQTree n t = compressQTreeAux ((depthQTree t) - n) t
+O algoritmo de determinação da célula que substitui o bloco caso seja necessário é também recursivo. A função mantém um acumulador do tamanho das células já consideradas, e no caso de base, retorna uma célula com a cor da célula no canto superior esquerdo do bloco original, e com o tamanho total deste. Caso contrário, soma a largura e altura da quadtree do canto inferior direito aos respetivos acumuladores, e invoca a função com os acumuladores atualizados na quadtree do canto superior esquerdo.
 
-outlineBlock x y = Block
+\begin{code}
+nwCell (Cell a x y) i j = Cell a (x + i) (y + j)
+nwCell (Block nw ne sw se) i j = nwCell nw (i + x) (j + y)
+    where (Cell _ x y) = nwCell se 0 0
+\end{code}
+
+\subsubsection*{3 - outlineQTree}
+
+Para transformar uma quadtree numa matrix com o seu contorno, transforma-se primeiro esta quadtree numa quadtree com o seu contorno, e em torno produz-se a matriz pretendida.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+        \ar[d]^-{|outlineQTreeAux p|}
+\\
+    |QTree Bool|
+        \ar[d]^-{|qt2bm|}
+\\
+    |Matrix Bool|
+}
+\end{eqnarray*}
+
+\begin{code}
+outlineQTree p = qt2bm . (outlineQTreeAux p)
+\end{code}
+
+A função auxiliar é um catamorfismo:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|cata g|}
+&
+    |B(A,QTree A)|
+           \ar[d]^-{|B(id,cata g)|}
+           \ar[l]_-{|inQTree|}
+\\
+     |QTree Bool|
+&
+     |B(A,QTree Bool|
+           \ar[l]^-{|g|}
+}
+\end{eqnarray*}
+
+\begin{code}
+outlineQTreeAux p = cataQTree g
+    where g = either (outlineCell p) (inQTree . i2)
+\end{code}
+
+A função outlineCell testa se uma célula faz parte do fundo com a função dada. Se sim, retorna um bloco de contorno (valor de True nas bordas e False no interior) com tamanho igual. Se não, retorna a mesma célula mas com o valor de False.
+
+\begin{code}
+outlineCell p (a, (x, y)) = cond p (const (outlinedBlock x y)) (const (Cell False x y)) a
+
+\end{code}
+
+% ilustração do bloco de contorno com imagem
+
+\begin{code}
+outlinedBlock x y = Block
     (Block (Cell True 1 1)
            (Cell True (x-2) 1)
            (Cell True 1 (y-2))
@@ -1195,29 +1414,9 @@ outlineBlock x y = Block
     (Cell True 1 (y-1))
     (Cell True (x-1) 1)
     (Cell True 1 1)
-
-outlineCell p (a, (x, y)) = cond p (const (outlineBlock x y)) (const (Cell False x y)) a
-outlineQTreeAux p = cataQTree (either (outlineCell p) (inQTree . i2))
-
-outlineQTree p = qt2bm . (outlineQTreeAux p)
-
 \end{code}
 
 \subsection*{Problema 3}
-
-\begin{code}
--- Converter as definições de fk, lk, g e s para a forma da regra 50 e aplicar a regra 51 a <fk,lk> e <g,s>
--- Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop
-base = tuploaux . (split (split (const 1) succ) (split (const 1) (const 1)))
-loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
-
--- Funções auxiliar para conversão de tipos
-tuploaux :: ((Integer, Integer),(Integer, Integer)) -> (Integer, Integer, Integer, Integer)
-tuploaux ((x, y),(w, z)) = (x, y, w ,z)
-
-paresaux :: (Integer, Integer, Integer, Integer) -> ((Integer, Integer),(Integer, Integer))
-paresaux (x, y, w ,z) = ((x, y),(w, z))
-\end{code}
 
 Conversão de f k:
 
@@ -1397,6 +1596,18 @@ Dedução de base e loop:
     loop = split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))
   )|
 \end{eqnarray*}
+
+\begin{code}
+base = tuploaux . (split (split (const 1) succ) (split (const 1) (const 1)))
+loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
+
+tuploaux :: ((Integer, Integer),(Integer, Integer)) -> (Integer, Integer, Integer, Integer)
+tuploaux ((x, y),(w, z)) = (x, y, w ,z)
+
+paresaux :: (Integer, Integer, Integer, Integer) -> ((Integer, Integer),(Integer, Integer))
+paresaux (x, y, w ,z) = ((x, y),(w, z))
+\end{code}
+
 \subsection*{Problema 4}
 
 \begin{code}

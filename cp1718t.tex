@@ -1328,7 +1328,7 @@ A definição dos combinadores para o Blockchain.
 \ColumnHook
 \end{hscode}\resethooks
 
-\subsubsection{allTransactions}
+\subsubsection*{1 - allTransactions}
 
 A partir de um bloco, podemos obter a sua lista de transações.
 
@@ -1379,7 +1379,7 @@ A função \textit{allTransactions} é um catamorfismo de Blockchains que tem co
 \ColumnHook
 \end{hscode}\resethooks
 
-\subsubsection{ledger}
+\subsubsection*{2 - ledger}
 
 É definido um tipo auxiliar, \texttt{Cashflow}, que representa um depósito de um certo valor na conta de uma entidade.
 
@@ -1392,17 +1392,56 @@ A função \textit{allTransactions} é um catamorfismo de Blockchains que tem co
 
 Para construir o ledger, primeiro extrai-se todas as transações do blockchain. Depois, através de um catamorfismo, é necessário transformar a lista de transações numa lista de cashflows. Finalmente, são agregados os resultados somando todos os cashflows pertencentes à mesma entidade, também através de um catamorfismo.
 
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Blockchain}}
+           \ar[d]_-{\ensuremath{\Varid{allTransactions}}}
+\\
+    \ensuremath{\Conid{Transactions}}
+           \ar[d]_-{\ensuremath{\cata{\Varid{g}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Transaction}\times\Conid{Transactions}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times\cata{\Varid{g}}}}
+           \ar[l]_-{\ensuremath{\Varid{inList}}}
+\\
+     \ensuremath{[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}\Conid{Transaction}\times[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+           \ar[l]^-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+           \ar[d]_-{\ensuremath{\cata{\Varid{h}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Cashflow}\times[\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times\cata{\Varid{h}}}}
+           \ar[l]_-{\ensuremath{\Varid{inList}}}
+\\
+     \ensuremath{\Conid{Ledger}}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}(\Conid{Entity}\times\Conid{Value})\times\Conid{Ledger}}
+           \ar[l]^-{\ensuremath{\Varid{h}\mathrel{=}\alt{\Varid{nil}}{\Varid{put}}}}
+}
+\end{eqnarray*}
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{11}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mbox{\onelinecomment  implementar com combinadores}{}\<[E]%
-\\
-\>[B]{}\Varid{ledger}\mathrel{=}(\Varid{cataList}\;\alt{\Varid{nil}}{\Varid{put}})\comp (\Varid{cataList}\;\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{f}\times\Varid{id})})\comp \Varid{allTransactions}{}\<[E]%
+\>[B]{}\Varid{ledger}\mathrel{=}(\Varid{cataList}\;\Varid{h})\comp (\Varid{cataList}\;\Varid{g})\comp \Varid{allTransactions}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;\Varid{f}\mathbin{::}\Conid{Transaction}\to [\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]{}\<[E]%
+\>[5]{}\mathbf{where}\;\Varid{g}\mathrel{=}\alt{\Varid{nil}}{\mathsf{conc}\comp (\Varid{f}\times\Varid{id})}{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{h}\mathrel{=}\alt{\Varid{nil}}{\Varid{put}}{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{f}\mathbin{::}\Conid{Transaction}\to [\mskip1.5mu \Conid{Cashflow}\mskip1.5mu]{}\<[E]%
 \\
 \>[5]{}\hsindent{6}{}\<[11]%
 \>[11]{}\Varid{f}\;(e_1 ,(\Varid{v},e_2 ))\mathrel{=}(e_1 ,\mathbin{-}\Varid{v})\mathbin{:}(e_2 ,\Varid{v})\mathbin{:}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
@@ -1422,8 +1461,7 @@ A função auxiliar \texttt{f} converte uma transação numa lista com dois cash
 
 A função auxiliar \texttt{put} trata de atualizar o ledger com um cashflow, adicionando ao valor da entidade se já consta no ledger, ou adicionando um novo elemento à lista (uma nova entidade).
 
-
-\subsubsection{isValidMagicNr}
+\subsubsection*{3 - isValidMagicNr}
 
 Cada bloco tem o seu número mágico.
 
@@ -1482,10 +1520,10 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \xymatrix@C=2cm{
     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
            \ar[d]_-{\ensuremath{\Varid{anaList}\;\Varid{h}}}
+           \ar[r]_-{\ensuremath{\Varid{h}}}
 &
     \ensuremath{\mathrm{1}\mathbin{+}(\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{anaList}\;\Varid{g})}}
-           \ar[l]_-{\ensuremath{\Varid{h}}}
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{anaList}\;\Varid{h})}}
 \\
      \ensuremath{[\mskip1.5mu \Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]\mskip1.5mu]}
 &
@@ -1495,15 +1533,15 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \end{eqnarray*}
 
 \begin{eqnarray*}
-\xymatrix@C=2cm{
+\xymatrix@C=1cm{
     \ensuremath{[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[d]_-{\ensuremath{\Varid{outList}}}
-           \ar[r]^-{\ensuremath{\Varid{h}}}
-&
+           \ar[dr]_-{\ensuremath{\Varid{outList}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}}}
+&&
      \ensuremath{\mathrm{1}\mathbin{+}(\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu])\times[\mskip1.5mu \Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]\mskip1.5mu]}
-\\
+\\&
     \ensuremath{\mathrm{1}\mathbin{+}\Conid{MagicNo}\times[\mskip1.5mu \Conid{MagicNo}\mskip1.5mu]}
-           \ar[ur]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{anaList}\;\Varid{g})}}
+           \ar[ur]^-{\ensuremath{\Varid{id}\mathbin{+}\conj{\Varid{id}}{\p2}}}
 }
 \end{eqnarray*}
 
@@ -1524,12 +1562,11 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 
 \subsection*{Problema 2}
 
+A definição dos combinadores para o tipo QTree.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{15}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inQTree}\;(i_1\;(\Varid{a},(\Varid{x},\Varid{y})))\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
@@ -1557,39 +1594,179 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathsf{fmap}\;\Varid{f}\mathrel{=}\Varid{cataQTree}\;(\Varid{inQTree}\comp (\Varid{baseQTree}\;\Varid{f}\;\Varid{id})){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment rotateCell (a, (x, y)) = (a, (y, x))}{}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\mathit B\;(\Conid{X},\Conid{Y})} = \ensuremath{\Conid{A}\times(\Conid{Int}\times\Conid{Int})\mathbin{+}\Conid{Y}\times(\Conid{Y}\times(\Conid{Y}\times\Conid{Y}))}
+}
+\end{eqnarray*}
+
+\subsubsection*{1 a) - rotateQTree}
+
+Para rodar uma QTree 90 graus, é preciso rodar cada célula 90 graus, e recursivamente reposicionar os ramos da árvore. Esta operação é um anamorfismo do próprio tipo.
+
+A operação de rotação de uma célula apenas troca as suas coordenadas, já que a célula representa um conjunto de pixeis (neste caso) todos com o mesmo valor.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{A}\times(\mathit B\times\mathit C)}
+        \ar[r]_-{\ensuremath{\Varid{id}\times\Varid{swap}}}
+&
+    \ensuremath{\Conid{A}\times(\mathit C\times\mathit B)}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateCell}\mathrel{=}\Varid{id}\times\Varid{swap}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment rotateBlock (nw, (ne, (sw, se))) = (sw, (nw, (se, ne)))}{}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+A operação de rotação de um conjunto de ramos implica a troca de posição entre eles.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{A}\times(\mathit B\times(\mathit C\times\Conid{D}))}
+        \ar[r]_-{\ensuremath{\Varid{rotateBlock}}}
+&
+    \ensuremath{\mathit C\times(\Conid{A}\times(\Conid{D}\times\mathit B))}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{rotateBlock}\mathrel{=}\conj{\p1\comp \p2\comp \p2}{\conj{\p1}{\conj{\p2\comp \p2\comp \p2}{\p1\comp \p2}}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Assim, temos o seguinte anamorfismo de QTrees:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{anaList}\;\Varid{h}}}
+           \ar[r]_-{\ensuremath{\Varid{h}}}
+&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[d]^{\ensuremath{\mathit B\;(\Varid{id},\Varid{anaQTree}\;\Varid{h})}}
 \\
-\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{anaQTree}\;((\Varid{rotateCell}+\Varid{rotateBlock})\comp \Varid{outQTree}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{scaleCell}\;\Varid{k}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Varid{outQTree}\;(\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{*}\Varid{k})\;(\Varid{y}\mathbin{*}\Varid{k})){}\<[E]%
-\\
-\>[B]{}\Varid{scaleCell}\;\anonymous \;\Varid{b}\mathrel{=}\Varid{outQTree}\;\Varid{b}{}\<[E]%
-\\
-\>[B]{}\Varid{scaleQTree}\;\Varid{k}\mathrel{=}\Varid{anaQTree}\;(\Varid{scaleCell}\;\Varid{k}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{invertPx}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a}{}\<[E]%
-\\
-\>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;\Varid{invertPx}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{nwCell}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\;\Varid{i}\;\Varid{j}\mathrel{=}\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{+}\Varid{i})\;(\Varid{y}\mathbin{+}\Varid{j}){}\<[E]%
-\\
-\>[B]{}\Varid{nwCell}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\;\Varid{i}\;\Varid{j}\mathrel{=}\Varid{nwCell}\;\Varid{nw}\;(\Varid{i}\mathbin{+}\Varid{x2})\;(\Varid{j}\mathbin{+}\Varid{y3}){}\<[E]%
+     \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+     \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[l]^-{\ensuremath{\Varid{inQTree}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2.5cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[dr]_-{\ensuremath{\Varid{outQTree}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}}}
+&&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+\\&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[ur]_-{\ensuremath{\Varid{rotateCell}\mathbin{+}\Varid{rotateBlock}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{rotateQTree}\mathrel{=}\Varid{anaQTree}\;\Varid{h}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;(\Conid{Cell}\;\anonymous \;\Varid{x2}\;\anonymous )\mathrel{=}\Varid{nwCell}\;\Varid{ne}\;\mathrm{0}\;\mathrm{0}{}\<[E]%
+\>[5]{}\mathbf{where}\;\Varid{h}\mathrel{=}(\Varid{rotateCell}+\Varid{rotateBlock})\comp \Varid{outQTree}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{1 b) - scaleQTree}
+
+A operação de redimensionar uma imagem por um certo fator implica apenas o redimensionamente de cada célula por esse mesmo fator. Trata-se de um anamorfismo, pois o resultado necessita de mais informação do que o conteúdo de cada célula (o seu tamanho atual).
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{anaList}\;(\Varid{h}\;\Varid{s})}}
+           \ar[r]_-{\ensuremath{\Varid{h}\;\Varid{s}}}
+&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[d]^{\ensuremath{\mathit B\;(\Varid{id},\Varid{anaQTree}\;(\Varid{h}\;\Varid{s}))}}
 \\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}(\Conid{Cell}\;\anonymous \;\anonymous \;\Varid{y3})\mathrel{=}\Varid{nwCell}\;\Varid{sw}\;\mathrm{0}\;\mathrm{0}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  implementar com combinadores}{}\<[E]%
+     \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+     \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[l]^-{\ensuremath{\Varid{inQTree}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2.5cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[dr]_-{\ensuremath{\Varid{outQTree}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}\;\Varid{s}}}
+&&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+\\&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[ur]_-{\ensuremath{\Varid{id}\times((\mathbin{*}\Varid{s})\times(\mathbin{*}\Varid{s}))\mathbin{+}\Varid{id}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{scaleQTree}\;\Varid{s}\mathrel{=}\Varid{anaQTree}\;(\Varid{h}\;\Varid{s}){}\<[E]%
 \\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{h}\;\Varid{s}\mathrel{=}((\Varid{id}\times((\mathbin{*}\Varid{s})\times(\mathbin{*}\Varid{s})))+\Varid{id})\comp \Varid{outQTree}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{1 c) - invertQTree}
+
+Inverter as cores de uma quadtree é uma operação que é feita invertendo a cor de cada pixel.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{invertPx}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Assim, podemos simplesmente utilizar o padrão funtor para implementar a função desejada.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{invertQTree}\mathrel{=}\mathsf{fmap}\;\Varid{invertPx}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{2 - compressQTree}
+
+Comprimir uma quadtree ao reduzir a sua profundidade em \texttt{n} níveis é equivalente a excluir todos os ramos depois de um certo nível (a profundidade atual menos \texttt{n}).
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{compressQTreeAux}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função auxiliar é uma função recursiva, e o seu primeiro argumento é decrementado a cada nível abaixo do atual. Se o argumento não for positivo e quadtree for um bloco de quadtrees, esse bloco é substituido por uma célula de igual tamanho à soma dos tamanhos dos quatro ramos.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{compressQTreeAux}\;\Varid{n}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\mathrel{=}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
@@ -1605,10 +1782,93 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \>[9]{}\mathbf{where}\;\Varid{f}\mathrel{=}\Varid{compressQTreeAux}{}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\Varid{compressQTreeAux}\;\Varid{n}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\mathrel{=}\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{compressQTree}\;\Varid{n}\;\Varid{t}\mathrel{=}\Varid{compressQTreeAux}\;((\Varid{depthQTree}\;\Varid{t})\mathbin{-}\Varid{n})\;\Varid{t}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{outlineBlock}\;\Varid{x}\;\Varid{y}\mathrel{=}\Conid{Block}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+O algoritmo de determinação da célula que substitui o bloco caso seja necessário é também recursivo. A função mantém um acumulador do tamanho das células já consideradas, e no caso de base, retorna uma célula com a cor da célula no canto superior esquerdo do bloco original, e com o tamanho total deste. Caso contrário, soma a largura e altura da quadtree do canto inferior direito aos respetivos acumuladores, e invoca a função com os acumuladores atualizados na quadtree do canto superior esquerdo.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{nwCell}\;(\Conid{Cell}\;\Varid{a}\;\Varid{x}\;\Varid{y})\;\Varid{i}\;\Varid{j}\mathrel{=}\Conid{Cell}\;\Varid{a}\;(\Varid{x}\mathbin{+}\Varid{i})\;(\Varid{y}\mathbin{+}\Varid{j}){}\<[E]%
+\\
+\>[B]{}\Varid{nwCell}\;(\Conid{Block}\;\Varid{nw}\;\Varid{ne}\;\Varid{sw}\;\Varid{se})\;\Varid{i}\;\Varid{j}\mathrel{=}\Varid{nwCell}\;\Varid{nw}\;(\Varid{i}\mathbin{+}\Varid{x})\;(\Varid{j}\mathbin{+}\Varid{y}){}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;(\Conid{Cell}\;\anonymous \;\Varid{x}\;\Varid{y})\mathrel{=}\Varid{nwCell}\;\Varid{se}\;\mathrm{0}\;\mathrm{0}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{3 - outlineQTree}
+
+Para transformar uma quadtree numa matrix com o seu contorno, transforma-se primeiro esta quadtree numa quadtree com o seu contorno, e em torno produz-se a matriz pretendida.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+        \ar[d]^-{\ensuremath{\Varid{outlineQTreeAux}\;\Varid{p}}}
+\\
+    \ensuremath{\Conid{QTree}\;\Conid{Bool}}
+        \ar[d]^-{\ensuremath{\Varid{qt2bm}}}
+\\
+    \ensuremath{\Conid{Matrix}\;\Conid{Bool}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlineQTree}\;\Varid{p}\mathrel{=}\Varid{qt2bm}\comp (\Varid{outlineQTreeAux}\;\Varid{p}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função auxiliar é um catamorfismo:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\cata{\Varid{g}}}}
+&
+    \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{A})}
+           \ar[d]^-{\ensuremath{\mathit B\;(\Varid{id},\cata{\Varid{g}})}}
+           \ar[l]_-{\ensuremath{\Varid{inQTree}}}
+\\
+     \ensuremath{\Conid{QTree}\;\Conid{Bool}}
+&
+     \ensuremath{\mathit B\;(\Conid{A},\Conid{QTree}\;\Conid{Bool}}
+           \ar[l]^-{\ensuremath{\Varid{g}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlineQTreeAux}\;\Varid{p}\mathrel{=}\Varid{cataQTree}\;\Varid{g}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{g}\mathrel{=}\alt{\Varid{outlineCell}\;\Varid{p}}{\Varid{inQTree}\comp i_2}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função outlineCell testa se uma célula faz parte do fundo com a função dada. Se sim, retorna um bloco de contorno (valor de True nas bordas e False no interior) com tamanho igual. Se não, retorna a mesma célula mas com o valor de False.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlineCell}\;\Varid{p}\;(\Varid{a},(\Varid{x},\Varid{y}))\mathrel{=}\Varid{cond}\;\Varid{p}\;\underline{(\Varid{outlinedBlock}\;\Varid{x}\;\Varid{y})}\;\underline{(\Conid{Cell}\;\Conid{False}\;\Varid{x}\;\Varid{y})}\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+% ilustração do bloco de contorno com imagem
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{outlinedBlock}\;\Varid{x}\;\Varid{y}\mathrel{=}\Conid{Block}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}(\Conid{Block}\;(\Conid{Cell}\;\Conid{True}\;\mathrm{1}\;\mathrm{1})\;{}\<[E]%
@@ -1630,39 +1890,10 @@ Com a lista de todos os números mágicos, podemos construir, através de um ana
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}(\Conid{Cell}\;\Conid{True}\;\mathrm{1}\;\mathrm{1}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{outlineCell}\;\Varid{p}\;(\Varid{a},(\Varid{x},\Varid{y}))\mathrel{=}\Varid{cond}\;\Varid{p}\;\underline{(\Varid{outlineBlock}\;\Varid{x}\;\Varid{y})}\;\underline{(\Conid{Cell}\;\Conid{False}\;\Varid{x}\;\Varid{y})}\;\Varid{a}{}\<[E]%
-\\
-\>[B]{}\Varid{outlineQTreeAux}\;\Varid{p}\mathrel{=}\Varid{cataQTree}\;\alt{\Varid{outlineCell}\;\Varid{p}}{\Varid{inQTree}\comp i_2}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{outlineQTree}\;\Varid{p}\mathrel{=}\Varid{qt2bm}\comp (\Varid{outlineQTreeAux}\;\Varid{p}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \subsection*{Problema 3}
-
-\begin{hscode}\SaveRestoreHook
-\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\mbox{\onelinecomment  Converter as definições de fk, lk, g e s para a forma da regra 50 e aplicar a regra 51 a <fk,lk> e <g,s>}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment  Igualar o resultado anterior ao catamorfismo do for e retirar a definição de base e loop}{}\<[E]%
-\\
-\>[B]{}\Varid{base}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{}\<[E]%
-\\
-\>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  Funções auxiliar para conversão de tipos}{}\<[E]%
-\\
-\>[B]{}\Varid{tuploaux}\mathbin{::}((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer}))\to (\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer}){}\<[E]%
-\\
-\>[B]{}\Varid{tuploaux}\;((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z}))\mathrel{=}(\Varid{x},\Varid{y},\Varid{w},\Varid{z}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{paresaux}\mathbin{::}(\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer})\to ((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer})){}\<[E]%
-\\
-\>[B]{}\Varid{paresaux}\;(\Varid{x},\Varid{y},\Varid{w},\Varid{z})\mathrel{=}((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z})){}\<[E]%
-\ColumnHook
-\end{hscode}\resethooks
 
 Conversão de f k:
 
@@ -1798,6 +2029,24 @@ Dedução de base e loop:
 %
         \ensuremath{\begin{lcbr}\Varid{base}\mathrel{=}\conj{\conj{\underline{\mathrm{1}}}{\mathbin{+}\mathrm{1}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\end{lcbr}}
 \end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{base}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{}\<[E]%
+\\
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{tuploaux}\mathbin{::}((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer}))\to (\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer}){}\<[E]%
+\\
+\>[B]{}\Varid{tuploaux}\;((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z}))\mathrel{=}(\Varid{x},\Varid{y},\Varid{w},\Varid{z}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{paresaux}\mathbin{::}(\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer})\to ((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer})){}\<[E]%
+\\
+\>[B]{}\Varid{paresaux}\;(\Varid{x},\Varid{y},\Varid{w},\Varid{z})\mathrel{=}((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
 \subsection*{Problema 4}
 
 \begin{hscode}\SaveRestoreHook
