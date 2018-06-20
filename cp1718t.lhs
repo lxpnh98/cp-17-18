@@ -1418,7 +1418,7 @@ outlinedBlock x y = Block
 
 \subsection*{Problema 3}
 
-Conversão de f k:
+conversão de f k:
 
 \begin{eqnarray*}
 \start
@@ -1427,21 +1427,21 @@ Conversão de f k:
   )(
     f k (d + 1) = (d + k  + 1) * f k d
   )|
-\just\equiv{ Igualdade extensional; (d + k  + 1) = l k d}
+\just\equiv{ igualdade extensional; (d + k  + 1) = l k d}
         |lcbr(
     f k . (const 0) = (const 1)
   )(
     f k . succ = mul (split (f k) (l k))
   )|
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 |either (f k . (const 0)) (f k . succ) = either (const 1) (mul (split (f k) (l k)))|
-\just\equiv{ Fusão-+; in = |either (const 0) (succ)| ; Absorção-+}
+\just\equiv{ fusão-+; in = |either (const 0) (succ)| ; absorção-+}
 |f k . in = (either (const 1) (mul)) . (id + (split (f k) (l k)))|
-\just\equiv{ F f = (id + f)}
-|f k . in = (either (const 1) (mul)) . F (split (f k) (l k))|
+\just\equiv{ f f = (id + f)}
+|f k . in = (either (const 1) (mul)) . f (split (f k) (l k))|
 \end{eqnarray*}
 
-Conversão de l k:
+conversão de l k:
 
 \begin{eqnarray*}
 \start
@@ -1451,25 +1451,25 @@ Conversão de l k:
     l k (d + 1) = l k d + 1
   )|
 %
-\just\equiv{ Igualdade extensional; Cancelamento-x }
+\just\equiv{ igualdade extensional; cancelamento-x }
 %
         |lcbr(
     l k . (const 0) = succ . k
   )(
     l k . succ = succ . p2 . (split (f k) (l k))
   )|
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 %
 |either (l k . (const 0)) (l k . succ) = either (succ . k) (succ . p2 . (split (f k) (l k)))|
-\just\equiv{ Fusão-+; in = |either (const 0) (succ)| ; Absorção-+}
+\just\equiv{ fusão-+; in = |either (const 0) (succ)| ; absorção-+}
 %
 |l k . in = (either (succ . k) (succ . p2)) . (id + (split (f k) (l k)))|
-\just\equiv{ F f = (id + f)}
+\just\equiv{ f f = (id + f)}
 %
-|l k . in = (either (succ . k) (succ . p2)) . F (split (f k) (l k))|
+|l k . in = (either (succ . k) (succ . p2)) . f (split (f k) (l k))|
 \end{eqnarray*}
 
-Conversão de g:
+conversão de g:
 
 \begin{eqnarray*}
 \start
@@ -1479,25 +1479,25 @@ Conversão de g:
     g (d + 1) = (d + 1) * g d
   )|
 %
-\just\equiv{ Igualdade extensional; (d + 1) = s d}
+\just\equiv{ igualdade extensional; (d + 1) = s d}
 %
         |lcbr(
     g . (const 0) = (const 1)
   )(
     g . succ = mul (split g s)
   )|
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 %
 |either (g . (const 0)) (g . succ) = either (const 1) (mul (split g s))|
-\just\equiv{ Fusão-+;  in = |either (const 0) (succ)| ; Absorção-+}
+\just\equiv{ fusão-+;  in = |either (const 0) (succ)| ; absorção-+}
 %
 |g . in = (either (const 1) (mul)) . (id + (split g s)|
-\just\equiv{ F f = (id + f)}
+\just\equiv{ f f = (id + f)}
 %
-|g . in = (either (const 1) (mul)) . F (split g s)|
+|g . in = (either (const 1) (mul)) . f (split g s)|
 \end{eqnarray*}
 
-Conversão de s:
+conversão de s:
 
 \begin{eqnarray*}
 \start
@@ -1507,88 +1507,88 @@ Conversão de s:
     s (d + 1) = s d + 1
   )|
 %
-\just\equiv{ Igualdade extensional; Cancelamento-x }
+\just\equiv{ igualdade extensional; cancelamento-x }
 %
         |lcbr(
     s . (const 0) = (const 1)
   )(
     s . succ = succ . p2 . (split g s)
   )|
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 %
 |either (s . (const 0)) (s . succ) = either (const 1) (succ . p2 . (split g s))|
-\just\equiv{ Fusão-+; in = |either (const 0) (succ)| ; Absorção-+}
+\just\equiv{ fusão-+; in = |either (const 0) (succ)| ; absorção-+}
 %
 |s . in = (either (const 1) (succ . p2)) . (id + (split g s))|
-\just\equiv{ F f = (id + f)}
+\just\equiv{ f f = (id + f)}
 %
-|s . in = (either (const 1) (succ . p2)) . F (split g s)|
+|s . in = (either (const 1) (succ . p2)) . f (split g s)|
 \end{eqnarray*}
 
-Aplicando a lei da recursividade múltipla para |split (f k) (l k)|:
+aplicando a lei da recursividade múltipla para |split (f k) (l k)|:
 
 \begin{eqnarray*}
 \start
         |lcbr(
-    f k . in = (either (const 1) (mul)) . F (split (f k) (l k))
+    f k . in = (either (const 1) (mul)) . f (split (f k) (l k))
   )(
-    l k . in = (either (succ . k) (succ . p2)) . F (split (f k) (l k))
+    l k . in = (either (succ . k) (succ . p2)) . f (split (f k) (l k))
   )|
 %
-\just\equiv{ Fokkinga }
+\just\equiv{ fokkinga }
 %
 |split (f k) (l k) = cata (split (either (const 1) (mul)) (either (succ . k) (succ . p2)))|
 \end{eqnarray*}
 
-Aplicando a lei da recursividade múltipla para |split g s|:
+aplicando a lei da recursividade múltipla para |split g s|:
 
 \begin{eqnarray*}
 \start
         |lcbr(
-    g . in = (either (const 1) (mul)) . F (split g s)
+    g . in = (either (const 1) (mul)) . f (split g s)
   )(
-    s . in = (either (const 1) (succ . p2)) . F (split g s)))
+    s . in = (either (const 1) (succ . p2)) . f (split g s)))
   )|
 %
-\just\equiv{ Fokkinga }
+\just\equiv{ fokkinga }
 %
 |split g s = cata (split (either (const 1) (mul)) (either (const 1) (succ . p2))|
 \end{eqnarray*}
 
-Combinação dos resultados:
+combinação dos resultados:
 
 \begin{eqnarray*}
 \start
 |split (cata((either (const 1) (mul)),(either (succ . k) (succ . p2)))) (cata((either (const 1) (mul)),(either (const 1) (succ . p2))))|
 %
-\just\equiv{ "Banana-split" }
+\just\equiv{ "banana-split" }
 %
-|cata (((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (F p1)(F p2)|
+|cata (((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (f p1)(f p2)|
 %
-\just\equiv{ Ff = (id + f); Absorção-x }
+\just\equiv{ ff = (id + f); absorção-x }
 %
 |cata (split (((either (const 1) (mul)),(either (succ . k) (succ . p2))).(id+p1)) (((either (const 1) (mul)),(either (const 1) (succ . p2))).(id+p2)))|
 %
-\just\equiv{ Fusão-x }
+\just\equiv{ fusão-x }
 %
 |cata (split (((either (const 1) (mul)).(id+p1),(either (succ . k) (succ . p2))).(id+p1)) (((either (const 1) (mul)).(id+p2),(either (const 1) (succ . p2))).(id+p2)))|
 %
-\just\equiv{ Absorção-+ (x4); Natural-id (x2) }
+\just\equiv{ absorção-+ (x4); natural-id (x2) }
 %
 |cata (split (((either (const 1) (mul.p1)),(either (succ.k) (succ.p2.p1)))) (((either (const 1) (mul.p2)),(either (const 1) (succ.p2.p2))))|
 \end{eqnarray*}
 
-Dedução de base e loop:
+dedução de base e loop:
 
 \begin{eqnarray*}
 \start
 |for loop base = cata (split (split (either (const 1) (mul.p1)) (either (succ) (succ.p2.p1))) (split (either (const 1) (mul.p2)) (either (const 1) (succ.p2.p2))))|
 %
-\just\equiv{ for b i = |cata (either (const i) (b))|; Lei da troca (x3) }
+\just\equiv{ for b i = |cata (either (const i) (b))|; lei da troca (x3) }
 %
 |cata (either base loop) = cata (either (split (split (const 1) (succ)) (split (const 1) (const 1))) (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))))|
 %
-\just\equiv{ |cata f| = |cata g| |==| f = g ; Eq-+ }
+\just\equiv{ |cata f| = |cata g| |==| f = g ; eq-+ }
 %
         |lcbr(
     base = split (split (const 1) (+1)) (split (const 1) (const 1))
@@ -1601,19 +1601,18 @@ Dedução de base e loop:
 base = tuploaux . (split (split (const 1) succ) (split (const 1) (const 1)))
 loop = tuploaux . (split (split (mul . p1) (succ . p2 . p1)) (split (mul . p2) (succ . p2 . p2))) . paresaux
 
-tuploaux :: ((Integer, Integer),(Integer, Integer)) -> (Integer, Integer, Integer, Integer)
+tuploaux :: ((integer, integer),(integer, integer)) -> (integer, integer, integer, integer)
 tuploaux ((x, y),(w, z)) = (x, y, w ,z)
 
-paresaux :: (Integer, Integer, Integer, Integer) -> ((Integer, Integer),(Integer, Integer))
+paresaux :: (integer, integer, integer, integer) -> ((integer, integer),(integer, integer))
 paresaux (x, y, w ,z) = ((x, y),(w, z))
 \end{code}
 
 \subsection*{Problema 4}
 
-\begin{code}
+A definição dos combinadores para o tipo FTree.
 
---inFTree (Left a) = Unit a
---inFTree (Right (a,(b,c))) = Comp a b c
+\begin{code}
 inFTree = either Unit (uncurry (\a -> uncurry (Comp a)))
 
 outFTree (Unit a) = i1 a
@@ -1627,54 +1626,132 @@ hyloFTree g h = cataFTree g . anaFTree h
 
 instance Bifunctor FTree where
     bimap f g = cataFTree (inFTree . (baseFTree f g id))
+\end{code}
 
--- generatePTree
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |B(X,Y,Z)| = |Y + X >< (Z >< Z)|
+}
+\end{eqnarray*}
 
-generatePTree = anaFTree (((const 1.0) -|- (split ((sqrt(2) ^) . succ) (split id id))) . outNat)
+\subsubsection*{1 - generatePTree}
 
--- drawPTree
+A função \texttt{generatePTree} constroi uma PTree dado um número natural, pelo que é um anamorfismo. A sua folhas mais exteriores tem o valor de |1.0|, e a cada nível mais perto da raiz da árvore o tamanho aumenta por um fator de |sqrt 2|.
 
--- mudar nomes de funções auxiliares
--- usar mais os combinadores nas funções de mais alto nível
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Nat|
+           \ar[d]_-{|anaNat h|}
+           \ar[r]_-{|h|}
+&
+    |B(Sq, Sq, Nat)|
+           \ar[d]^{|B(id, id, anaNat h)|}
+\\
+    |FTree Sq Sq|
+&
+    |B(Sq, Sq, FTree Sq Sq)|
+           \ar[l]^-{|inFTree|}
+}
+\end{eqnarray*}
 
-drawPTreeAux x pos dir (Unit (a,n)) = [mkSquare x n a pos dir]
-drawPTreeAux x pos dir (Comp (a,n) e d) =
-    [mkSquare x n a pos dir] ++
-    (drawPTreeAux x newPos1 newDir1 e) ++
-    (drawPTreeAux x newPos2 newDir2 d)
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Nat|
+           \ar[dr]_-{|outNat|}
+           \ar[rr]^-{|h|}
+&&
+    |B(Sq, Sq, Nat)|
+\\&
+    |1 + Nat|
+           \ar[ur]_-{|(const 1.0) + (split (((sqrt 2) ^) . succ) (split id id))|}
+}
+\end{eqnarray*}
+
+\begin{code}
+generatePTree = anaFTree h
+    where h = ((const 1.0) -|- (split ((sqrt(2) ^) . succ) (split id id))) . outNat
+\end{code}
+
+\subsubsection*{2 - drawPTree}
+
+Para desenhar a árvore de Pitágoras como uma animação, é preciso construir a lista de imagens em que cada imagem é um frame da animação. Isto é feito através de um ciclo for (um catamorfismo) cujo corpo é uma função que recebe a lista da animação já construida e o número do próximo frame a incluir nessa lista. Este ciclo for tem tantas iterações quanto a profundidade da árvore para desenhar.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |FTree Sq Sq|
+           \ar[d]_-{|depthFTree|}
+\\
+    |Nat|
+           \ar[d]_-{|cata (either (const zero) body)|}
+&
+    |1 + Nat|
+           \ar[d]^-{|id + (cata (either (const zero) body))|}
+           \ar[l]_-{|inNat|}
+\\
+     |[Picture] >< Nat|
+&
+     |1 + [Picture] >< Nat|
+           \ar[l]^-{|g = either (const zero) body|}
+}
+\end{eqnarray*}
+
+\begin{code}
+drawPTree t = animation
+    where (animation, _) = for body zero (depthFTree t)
+          zero = ([f 0], 0)
+          f x = drawPTreeAt x t
+          body (r, n) = (r ++ [f (n+1)], n+1)
+\end{code}
+
+A função que gera cada frame da animação primeiro emparelha cada folha da árvore com um número que representa a sua posição relativa à raiz.
+
+\begin{code}
+tagPTree n = inFTree . (f -|- f >< (rec >< rec)) . outFTree
+    where f = split id (const n)
+          rec = tagPTree (n + 1)
+\end{code}
+
+Depois, a função |drawPTreeAt| constroi uma lista de imagens, uma para cada quadrado, através de uma função auxiliar, torna essa lista numa só imagem, e aumenta o seu tamanho para que os resultados sejam visíveis no ecrã.
+
+\begin{code}
+drawPTreeAt x = (Graphics.Gloss.scale 20.0 20.0) . pictures . (drawPTreeAtAux x (0.0,0.0) (0.0,1.0)) . tagPTree 0
+\end{code}
+
+A função auxiliar é uma função recursiva. Ela mantém como argumentos o atual frame, a posição e direção do próximo quadrado a desenhar. Nas chamadas recursivas estes valores são atualizados conforme previsto pela geometria da árvore de Pitágoras.
+
+\begin{code}
+drawPTreeAtAux x pos dir (Unit (a,n)) = [drawSquare x n a pos dir]
+drawPTreeAtAux x pos dir (Comp (a,n) e d) =
+    [drawSquare x n a pos dir] ++
+    (drawPTreeAtAux x newPos1 newDir1 e) ++
+    (drawPTreeAtAux x newPos2 newDir2 d)
         where newPos1 = addV pos (addV (resizeV a dir) (rotateV (-90.0) (resizeV (a/2.0) dir)))
               newDir1 = rotateV (-45.0) $ scaleV ((sqrt 2.0)/2.0) dir
               newPos2 = addV pos (addV (resizeV a dir) (rotateV (90.0) (resizeV (a/2.0) dir)))
               newDir2 = rotateV 45.0 $ scaleV ((sqrt 2.0)/2.0) dir
+\end{code}
 
-mkSquare max_n n a (x, y) dir =
+A função que desenha um dos quadrados recebe a posição em que desenhar e a direção para deduzir a rotação necessária. Se a profundidade atual for maior que a profundidade máxima pretendida para o frame da animação, a função retorna uma imagem vazia.
+
+\begin{code}
+drawSquare max_n n a (x, y) dir =
     if (n <= max_n)
     then Translate x y (Rotate (getAngle dir) (rectangleSolid a a))
     else Blank
+\end{code}
 
+Funções auxiliares para manipulação de vetores 2D.
+
+\begin{code}
 addV (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
-
-getAngle (x, y) = toDeg $ atan2 y x
-rotateV theta (x, y) = (x * cos rad + y * sin rad, y * cos rad - x * sin rad)
-    where rad = toRad theta
 scaleV k (x, y) = (x*k, y*k)
 lengthV (x, y) = sqrt (x^^2 + y^^2)
 resizeV l v = scaleV (l/(lengthV v)) v
-
+getAngle (x, y) = toDeg $ atan2 y x
+rotateV theta (x, y) = (x * cos rad + y * sin rad, y * cos rad - x * sin rad)
+    where rad = toRad theta
 toRad deg = deg / 360.0 * (2.0*pi)
 toDeg rad = rad / (2.0*pi) * 360.0 - 90.0
-
-drawPTreeAux2 x = (Graphics.Gloss.scale 50.0 50.0) . pictures . (drawPTreeAux x (0.0,0.0) (0.0,1.0)) . tagPTree 0
-
-tagPTree n = inFTree . (f -|- f >< (rec >< rec)) . outFTree
-    where f = split id (const n)
-          rec = tagPTree (n + 1)
-
-drawPTree t = animation
-    where (animation, _) = for body ([f 0], 0) (depthFTree t)
-          f x = drawPTreeAux2 x t
-          body (r, n) = (r ++ [f (n+1)], n+1)
-
 \end{code}
 
 \subsection*{Problema 5}

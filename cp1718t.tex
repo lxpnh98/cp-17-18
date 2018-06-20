@@ -1895,137 +1895,137 @@ A função outlineCell testa se uma célula faz parte do fundo com a função da
 
 \subsection*{Problema 3}
 
-Conversão de f k:
+conversão de f k:
 
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\;\mathrm{0}\mathrel{=}\mathrm{1}\\\Varid{f}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}(\Varid{d}\mathbin{+}\Varid{k}\mathbin{+}\mathrm{1})\mathbin{*}\Varid{f}\;\Varid{k}\;\Varid{d}\end{lcbr}}
-\just\equiv{ Igualdade extensional; (d + k  + 1) = l k d}
+\just\equiv{ igualdade extensional; (d + k  + 1) = l k d}
         \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{f}\;\Varid{k}\comp \Varid{succ}\mathrel{=}\Varid{mul}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 \ensuremath{\alt{\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{f}\;\Varid{k}\comp \Varid{succ}}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}}
-\just\equiv{ Fusão-+; in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; Absorção-+}
+\just\equiv{ fusão-+; in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; absorção-+}
 \ensuremath{\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})}
-\just\equiv{ F f = (id + f)}
-\ensuremath{\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
+\just\equiv{ f f = (id + f)}
+\ensuremath{\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Varid{f}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
 \end{eqnarray*}
 
-Conversão de l k:
+conversão de l k:
 
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\;\mathrm{0}\mathrel{=}\Varid{k}\mathbin{+}\mathrm{1}\\\Varid{l}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{l}\;\Varid{k}\;\Varid{d}\mathbin{+}\mathrm{1}\end{lcbr}}
 %
-\just\equiv{ Igualdade extensional; Cancelamento-x }
+\just\equiv{ igualdade extensional; cancelamento-x }
 %
         \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\Varid{succ}\comp \Varid{k}\\\Varid{l}\;\Varid{k}\comp \Varid{succ}\mathrel{=}\Varid{succ}\comp \p2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 %
 \ensuremath{\alt{\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{l}\;\Varid{k}\comp \Varid{succ}}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}}
-\just\equiv{ Fusão-+; in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; Absorção-+}
+\just\equiv{ fusão-+; in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; absorção-+}
 %
 \ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})}
-\just\equiv{ F f = (id + f)}
+\just\equiv{ f f = (id + f)}
 %
-\ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
+\ensuremath{\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp \Varid{f}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
 \end{eqnarray*}
 
-Conversão de g:
+conversão de g:
 
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{g}\;\mathrm{0}\mathrel{=}\mathrm{1}\\\Varid{g}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}(\Varid{d}\mathbin{+}\mathrm{1})\mathbin{*}\Varid{g}\;\Varid{d}\end{lcbr}}
 %
-\just\equiv{ Igualdade extensional; (d + 1) = s d}
+\just\equiv{ igualdade extensional; (d + 1) = s d}
 %
         \ensuremath{\begin{lcbr}\Varid{g}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{g}\comp \Varid{succ}\mathrel{=}\Varid{mul}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 %
 \ensuremath{\alt{\Varid{g}\comp \underline{\mathrm{0}}}{\Varid{g}\comp \Varid{succ}}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}\;\conj{\Varid{g}}{\Varid{s}}}}
-\just\equiv{ Fusão-+;  in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; Absorção-+}
+\just\equiv{ fusão-+;  in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; absorção-+}
 %
 \ensuremath{\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}}}
-\just\equiv{ F f = (id + f)}
+\just\equiv{ f f = (id + f)}
 %
-\ensuremath{\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}}
+\ensuremath{\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Varid{f}\;\conj{\Varid{g}}{\Varid{s}}}
 \end{eqnarray*}
 
-Conversão de s:
+conversão de s:
 
 \begin{eqnarray*}
 \start
         \ensuremath{\begin{lcbr}\Varid{s}\;\mathrm{0}\mathrel{=}\mathrm{1}\\\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{s}\;\Varid{d}\mathbin{+}\mathrm{1}\end{lcbr}}
 %
-\just\equiv{ Igualdade extensional; Cancelamento-x }
+\just\equiv{ igualdade extensional; cancelamento-x }
 %
         \ensuremath{\begin{lcbr}\Varid{s}\comp \underline{\mathrm{0}}\mathrel{=}\underline{\mathrm{1}}\\\Varid{s}\comp \Varid{succ}\mathrel{=}\Varid{succ}\comp \p2\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
-\just\equiv{ Eq-+ }
+\just\equiv{ eq-+ }
 %
 \ensuremath{\alt{\Varid{s}\comp \underline{\mathrm{0}}}{\Varid{s}\comp \Varid{succ}}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2\comp \conj{\Varid{g}}{\Varid{s}}}}
-\just\equiv{ Fusão-+; in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; Absorção-+}
+\just\equiv{ fusão-+; in = \ensuremath{\alt{\underline{\mathrm{0}}}{\Varid{succ}}} ; absorção-+}
 %
 \ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}})}
-\just\equiv{ F f = (id + f)}
+\just\equiv{ f f = (id + f)}
 %
-\ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}}
+\ensuremath{\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp \Varid{f}\;\conj{\Varid{g}}{\Varid{s}}}
 \end{eqnarray*}
 
-Aplicando a lei da recursividade múltipla para \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}:
+aplicando a lei da recursividade múltipla para \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}:
 
 \begin{eqnarray*}
 \start
-        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\\\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Varid{f}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\\\Varid{l}\;\Varid{k}\comp \mathbf{in}\mathrel{=}\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}\comp \Varid{f}\;\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
 %
-\just\equiv{ Fokkinga }
+\just\equiv{ fokkinga }
 %
 \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\mathrel{=}\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}}}}
 \end{eqnarray*}
 
-Aplicando a lei da recursividade múltipla para \ensuremath{\conj{\Varid{g}}{\Varid{s}}}:
+aplicando a lei da recursividade múltipla para \ensuremath{\conj{\Varid{g}}{\Varid{s}}}:
 
 \begin{eqnarray*}
 \start
-        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\\\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp \Conid{F}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}))}
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp \Varid{f}\;\conj{\Varid{g}}{\Varid{s}}\\\Varid{s}\comp \mathbf{in}\mathrel{=}\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}\comp \Varid{f}\;\conj{\Varid{g}}{\Varid{s}}\end{lcbr}))}
 %
-\just\equiv{ Fokkinga }
+\just\equiv{ fokkinga }
 %
 \ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}}}}
 \end{eqnarray*}
 
-Combinação dos resultados:
+combinação dos resultados:
 
 \begin{eqnarray*}
 \start
 \ensuremath{\conj{\cata{\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2}}}{\cata{\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2}}}}
 %
-\just\equiv{ "Banana-split" }
+\just\equiv{ "banana-split" }
 %
-\ensuremath{\cata{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\times(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2})}\comp \conj{\Conid{F}\;\p1}{\Conid{F}\;\p2}}
+\ensuremath{\cata{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\times(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2})}\comp \conj{\Varid{f}\;\p1}{\Varid{f}\;\p2}}
 %
-\just\equiv{ Ff = (id + f); Absorção-x }
+\just\equiv{ ff = (id + f); absorção-x }
 %
 \ensuremath{\cata{\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p1)}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p2)}}}
 %
-\just\equiv{ Fusão-x }
+\just\equiv{ fusão-x }
 %
 \ensuremath{\cata{\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\p1),\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p1)}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}}\comp (\Varid{id}\mathbin{+}\p2),\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2})\comp (\Varid{id}\mathbin{+}\p2)}}}
 %
-\just\equiv{ Absorção-+ (x4); Natural-id (x2) }
+\just\equiv{ absorção-+ (x4); natural-id (x2) }
 %
 \ensuremath{\cata{\conj{(\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1},\alt{\Varid{succ}\comp \Varid{k}}{\Varid{succ}\comp \p2\comp \p1})}{(\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2},\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2\comp \p2})}}}
 \end{eqnarray*}
 
-Dedução de base e loop:
+dedução de base e loop:
 
 \begin{eqnarray*}
 \start
 \ensuremath{\mathsf{for}\ \Varid{loop}\ \Varid{base}\mathrel{=}\cata{\conj{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p1}}{\alt{\Varid{succ}}{\Varid{succ}\comp \p2\comp \p1}}}{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}\comp \p2}}{\alt{\underline{\mathrm{1}}}{\Varid{succ}\comp \p2\comp \p2}}}}}
 %
-\just\equiv{ for b i = \ensuremath{\cata{\alt{\underline{\Varid{i}}}{\Varid{b}}}}; Lei da troca (x3) }
+\just\equiv{ for b i = \ensuremath{\cata{\alt{\underline{\Varid{i}}}{\Varid{b}}}}; lei da troca (x3) }
 %
 \ensuremath{\cata{\alt{\Varid{base}}{\Varid{loop}}}\mathrel{=}\cata{\alt{\conj{\conj{\underline{\mathrm{1}}}{\Varid{succ}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}}{\conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}}}}
 %
-\just\equiv{ \ensuremath{\cata{\Varid{f}}} = \ensuremath{\cata{\Varid{g}}} \ensuremath{\equiv } f = g ; Eq-+ }
+\just\equiv{ \ensuremath{\cata{\Varid{f}}} = \ensuremath{\cata{\Varid{g}}} \ensuremath{\equiv } f = g ; eq-+ }
 %
         \ensuremath{\begin{lcbr}\Varid{base}\mathrel{=}\conj{\conj{\underline{\mathrm{1}}}{\mathbin{+}\mathrm{1}}}{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}\\\Varid{loop}\mathrel{=}\conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\end{lcbr}}
 \end{eqnarray*}
@@ -2037,11 +2037,11 @@ Dedução de base e loop:
 \\
 \>[B]{}\Varid{loop}\mathrel{=}\Varid{tuploaux}\comp \conj{\conj{\Varid{mul}\comp \p1}{\Varid{succ}\comp \p2\comp \p1}}{\conj{\Varid{mul}\comp \p2}{\Varid{succ}\comp \p2\comp \p2}}\comp \Varid{paresaux}{}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{tuploaux}\mathbin{::}((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer}))\to (\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer}){}\<[E]%
+\>[B]{}\Varid{tuploaux}\mathbin{::}((\Varid{integer},\Varid{integer}),(\Varid{integer},\Varid{integer}))\to (\Varid{integer},\Varid{integer},\Varid{integer},\Varid{integer}){}\<[E]%
 \\
 \>[B]{}\Varid{tuploaux}\;((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z}))\mathrel{=}(\Varid{x},\Varid{y},\Varid{w},\Varid{z}){}\<[E]%
 \\[\blanklineskip]%
-\>[B]{}\Varid{paresaux}\mathbin{::}(\Conid{Integer},\Conid{Integer},\Conid{Integer},\Conid{Integer})\to ((\Conid{Integer},\Conid{Integer}),(\Conid{Integer},\Conid{Integer})){}\<[E]%
+\>[B]{}\Varid{paresaux}\mathbin{::}(\Varid{integer},\Varid{integer},\Varid{integer},\Varid{integer})\to ((\Varid{integer},\Varid{integer}),(\Varid{integer},\Varid{integer})){}\<[E]%
 \\
 \>[B]{}\Varid{paresaux}\;(\Varid{x},\Varid{y},\Varid{w},\Varid{z})\mathrel{=}((\Varid{x},\Varid{y}),(\Varid{w},\Varid{z})){}\<[E]%
 \ColumnHook
@@ -2049,12 +2049,11 @@ Dedução de base e loop:
 
 \subsection*{Problema 4}
 
+A definição dos combinadores para o tipo FTree.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\mbox{\onelinecomment inFTree (Left a) = Unit a}{}\<[E]%
 \\
@@ -2080,29 +2079,132 @@ Dedução de base e loop:
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\Varid{bimap}\;\Varid{f}\;\Varid{g}\mathrel{=}\Varid{cataFTree}\;(\Varid{inFTree}\comp (\Varid{baseFTree}\;\Varid{f}\;\Varid{g}\;\Varid{id})){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  generatePTree}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;((\underline{\mathrm{1.0}}+\conj{(\Varid{sqrt}\;(\mathrm{2})\mathbin{\uparrow})\comp \Varid{succ}}{\conj{\Varid{id}}{\Varid{id}}})\comp \Varid{outNat}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  drawPTree}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  mudar nomes de funções auxiliares}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\mathit B\;(\Conid{X},\Conid{Y},\Conid{Z})} = \ensuremath{\Conid{Y}\mathbin{+}\Conid{X}\times(\Conid{Z}\times\Conid{Z})}
+}
+\end{eqnarray*}
+
+\subsubsection*{1 - generatePTree}
+
+A função \texttt{generatePTree} constroi uma PTree dado um número natural, pelo que é um anamorfismo. A sua folhas mais exteriores tem o valor de \ensuremath{\mathrm{1.0}}, e a cada nível mais perto da raiz da árvore o tamanho aumenta por um fator de \ensuremath{\Varid{sqrt}\;\mathrm{2}}.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Nat}}
+           \ar[d]_-{\ensuremath{\Varid{anaNat}\;\Varid{h}}}
+           \ar[r]_-{\ensuremath{\Varid{h}}}
+&
+    \ensuremath{\mathit B\;(\Conid{Sq},\Conid{Sq},\Conid{Nat})}
+           \ar[d]^{\ensuremath{\mathit B\;(\Varid{id},\Varid{id},\Varid{anaNat}\;\Varid{h})}}
 \\
-\>[B]{}\mbox{\onelinecomment  usar mais os combinadores nas funções de mais alto nível}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{drawPTreeAux}\;\Varid{x}\;\Varid{pos}\;\Varid{dir}\;(\Conid{Unit}\;(\Varid{a},\Varid{n}))\mathrel{=}[\mskip1.5mu \Varid{mkSquare}\;\Varid{x}\;\Varid{n}\;\Varid{a}\;\Varid{pos}\;\Varid{dir}\mskip1.5mu]{}\<[E]%
-\\
-\>[B]{}\Varid{drawPTreeAux}\;\Varid{x}\;\Varid{pos}\;\Varid{dir}\;(\Conid{Comp}\;(\Varid{a},\Varid{n})\;\Varid{e}\;\Varid{d})\mathrel{=}{}\<[E]%
+    \ensuremath{\Conid{FTree}\;\Conid{Sq}\;\Conid{Sq}}
+&
+    \ensuremath{\mathit B\;(\Conid{Sq},\Conid{Sq},\Conid{FTree}\;\Conid{Sq}\;\Conid{Sq})}
+           \ar[l]^-{\ensuremath{\Varid{inFTree}}}
+}
+\end{eqnarray*}
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Nat}}
+           \ar[dr]_-{\ensuremath{\Varid{outNat}}}
+           \ar[rr]^-{\ensuremath{\Varid{h}}}
+&&
+    \ensuremath{\mathit B\;(\Conid{Sq},\Conid{Sq},\Conid{Nat})}
+\\&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Nat}}
+           \ar[ur]_-{\ensuremath{\underline{\mathrm{1.0}}\mathbin{+}\conj{((\Varid{sqrt}\;\mathrm{2})\mathbin{\uparrow})\comp \Varid{succ}}{\conj{\Varid{id}}{\Varid{id}}}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;\Varid{h}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}[\mskip1.5mu \Varid{mkSquare}\;\Varid{x}\;\Varid{n}\;\Varid{a}\;\Varid{pos}\;\Varid{dir}\mskip1.5mu]\plus {}\<[E]%
+\>[5]{}\mathbf{where}\;\Varid{h}\mathrel{=}(\underline{\mathrm{1.0}}+\conj{(\Varid{sqrt}\;(\mathrm{2})\mathbin{\uparrow})\comp \Varid{succ}}{\conj{\Varid{id}}{\Varid{id}}})\comp \Varid{outNat}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{2 - drawPTree}
+
+Para desenhar a árvore de Pitágoras como uma animação, é preciso construir a lista de imagens em que cada imagem é um frame da animação. Isto é feito através de um ciclo for (um catamorfismo) cujo corpo é uma função que recebe a lista da animação já construida e o número do próximo frame a incluir nessa lista.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{FTree}\;\Conid{Sq}\;\Conid{Sq}}
+           \ar[d]_-{\ensuremath{\Varid{depthFTree}}}
+\\
+    \ensuremath{\Conid{Nat}}
+           \ar[d]_-{\ensuremath{\cata{\alt{\underline{\Varid{zero}}}{\Varid{body}}}}}
+&
+    \ensuremath{\mathrm{1}\mathbin{+}\Conid{Nat}}
+           \ar[d]^-{\ensuremath{\Varid{id}\mathbin{+}\cata{\alt{\underline{\Varid{zero}}}{\Varid{body}}}}}
+           \ar[l]_-{\ensuremath{\mathsf{in}}}
+\\
+     \ensuremath{[\mskip1.5mu \Conid{Picture}\mskip1.5mu]\times\Conid{Nat}}
+&
+     \ensuremath{\mathrm{1}\mathbin{+}[\mskip1.5mu \Conid{Picture}\mskip1.5mu]\times\Conid{Nat}}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\underline{\Varid{zero}}}{\Varid{body}}}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{drawPTree}\;\Varid{t}\mathrel{=}\Varid{animation}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}(\Varid{drawPTreeAux}\;\Varid{x}\;\Varid{newPos1}\;\Varid{newDir1}\;\Varid{e})\plus {}\<[E]%
+\>[5]{}\mathbf{where}\;(\Varid{animation},\anonymous )\mathrel{=}\mathsf{for}\ \Varid{body}\ \Varid{zero}\;(\Varid{depthFTree}\;\Varid{t}){}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{zero}\mathrel{=}([\mskip1.5mu \Varid{f}\;\mathrm{0}\mskip1.5mu],\mathrm{0}){}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{f}\;\Varid{x}\mathrel{=}\Varid{drawPTreeAt}\;\Varid{x}\;\Varid{t}{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{body}\;(\Varid{r},\Varid{n})\mathrel{=}(\Varid{r}\plus [\mskip1.5mu \Varid{f}\;(\Varid{n}\mathbin{+}\mathrm{1})\mskip1.5mu],\Varid{n}\mathbin{+}\mathrm{1}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{drawPTreeAt}\;\Varid{x}\mathrel{=}(\Varid{\Conid{Graphics}.\Conid{Gloss}.scale}\;\mathrm{20.0}\;\mathrm{20.0})\comp \Varid{pictures}\comp (\Varid{drawPTreeAtAux}\;\Varid{x}\;(\mathrm{0.0},\mathrm{0.0})\;(\mathrm{0.0},\mathrm{1.0}))\comp \Varid{tagPTree}\;\mathrm{0}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{tagPTree}\;\Varid{n}\mathrel{=}\Varid{inFTree}\comp (\Varid{f}+\Varid{f}\times(\Varid{rec}\times\Varid{rec}))\comp \Varid{outFTree}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}(\Varid{drawPTreeAux}\;\Varid{x}\;\Varid{newPos2}\;\Varid{newDir2}\;\Varid{d}){}\<[E]%
+\>[5]{}\mathbf{where}\;\Varid{f}\mathrel{=}\conj{\Varid{id}}{\underline{\Varid{n}}}{}\<[E]%
+\\
+\>[5]{}\hsindent{6}{}\<[11]%
+\>[11]{}\Varid{rec}\mathrel{=}\Varid{tagPTree}\;(\Varid{n}\mathbin{+}\mathrm{1}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{drawPTreeAtAux}\;\Varid{x}\;\Varid{pos}\;\Varid{dir}\;(\Conid{Unit}\;(\Varid{a},\Varid{n}))\mathrel{=}[\mskip1.5mu \Varid{drawSquare}\;\Varid{x}\;\Varid{n}\;\Varid{a}\;\Varid{pos}\;\Varid{dir}\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{drawPTreeAtAux}\;\Varid{x}\;\Varid{pos}\;\Varid{dir}\;(\Conid{Comp}\;(\Varid{a},\Varid{n})\;\Varid{e}\;\Varid{d})\mathrel{=}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}[\mskip1.5mu \Varid{drawSquare}\;\Varid{x}\;\Varid{n}\;\Varid{a}\;\Varid{pos}\;\Varid{dir}\mskip1.5mu]\plus {}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}(\Varid{drawPTreeAtAux}\;\Varid{x}\;\Varid{newPos1}\;\Varid{newDir1}\;\Varid{e})\plus {}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}(\Varid{drawPTreeAtAux}\;\Varid{x}\;\Varid{newPos2}\;\Varid{newDir2}\;\Varid{d}){}\<[E]%
 \\
 \>[5]{}\hsindent{4}{}\<[9]%
 \>[9]{}\mathbf{where}\;\Varid{newPos1}\mathrel{=}\Varid{addV}\;\Varid{pos}\;(\Varid{addV}\;(\Varid{resizeV}\;\Varid{a}\;\Varid{dir})\;(\Varid{rotateV}\;(\mathbin{-}\mathrm{90.0})\;(\Varid{resizeV}\;(\Varid{a}\mathbin{/}\mathrm{2.0})\;\Varid{dir}))){}\<[E]%
@@ -2115,8 +2217,16 @@ Dedução de base e loop:
 \\
 \>[9]{}\hsindent{6}{}\<[15]%
 \>[15]{}\Varid{newDir2}\mathrel{=}\Varid{rotateV}\;\mathrm{45.0}\mathbin{\$}\Varid{scaleV}\;((\Varid{sqrt}\;\mathrm{2.0})\mathbin{/}\mathrm{2.0})\;\Varid{dir}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{mkSquare}\;\Varid{max\char95 n}\;\Varid{n}\;\Varid{a}\;(\Varid{x},\Varid{y})\;\Varid{dir}\mathrel{=}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+A função que desenha um dos quadrados recebe a posição em que desenhar e a direção para deduzir a rotação necessária. Se a profundidade atual for maior que a profundidade máxima pretendida para o frame da animação, a função retorna uma imagem vazia.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{drawSquare}\;\Varid{max\char95 n}\;\Varid{n}\;\Varid{a}\;(\Varid{x},\Varid{y})\;\Varid{dir}\mathrel{=}{}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathbf{if}\;(\Varid{n}\leq \Varid{max\char95 n}){}\<[E]%
@@ -2126,9 +2236,23 @@ Dedução de base e loop:
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathbf{else}\;\Conid{Blank}{}\<[E]%
-\\[\blanklineskip]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Funções auxiliares para manipulação de vetores 2D.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{addV}\;(\Varid{x1},\Varid{y1})\;(\Varid{x2},\Varid{y2})\mathrel{=}(\Varid{x1}\mathbin{+}\Varid{x2},\Varid{y1}\mathbin{+}\Varid{y2}){}\<[E]%
-\\[\blanklineskip]%
+\\
+\>[B]{}\Varid{scaleV}\;\Varid{k}\;(\Varid{x},\Varid{y})\mathrel{=}(\Varid{x}\mathbin{*}\Varid{k},\Varid{y}\mathbin{*}\Varid{k}){}\<[E]%
+\\
+\>[B]{}\Varid{lengthV}\;(\Varid{x},\Varid{y})\mathrel{=}\Varid{sqrt}\;(\Varid{x}\mathbin{\uparrow\uparrow}\mathrm{2}\mathbin{+}\Varid{y}\mathbin{\uparrow\uparrow}\mathrm{2}){}\<[E]%
+\\
+\>[B]{}\Varid{resizeV}\;\Varid{l}\;\Varid{v}\mathrel{=}\Varid{scaleV}\;(\Varid{l}\mathbin{/}(\Varid{lengthV}\;\Varid{v}))\;\Varid{v}{}\<[E]%
+\\
 \>[B]{}\Varid{getAngle}\;(\Varid{x},\Varid{y})\mathrel{=}\Varid{toDeg}\mathbin{\$}\Varid{atan2}\;\Varid{y}\;\Varid{x}{}\<[E]%
 \\
 \>[B]{}\Varid{rotateV}\;\Varid{theta}\;(\Varid{x},\Varid{y})\mathrel{=}(\Varid{x}\mathbin{*}\Varid{cos}\;\Varid{rad}\mathbin{+}\Varid{y}\mathbin{*}\Varid{sin}\;\Varid{rad},\Varid{y}\mathbin{*}\Varid{cos}\;\Varid{rad}\mathbin{-}\Varid{x}\mathbin{*}\Varid{sin}\;\Varid{rad}){}\<[E]%
@@ -2136,36 +2260,9 @@ Dedução de base e loop:
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\mathbf{where}\;\Varid{rad}\mathrel{=}\Varid{toRad}\;\Varid{theta}{}\<[E]%
 \\
-\>[B]{}\Varid{scaleV}\;\Varid{k}\;(\Varid{x},\Varid{y})\mathrel{=}(\Varid{x}\mathbin{*}\Varid{k},\Varid{y}\mathbin{*}\Varid{k}){}\<[E]%
-\\
-\>[B]{}\Varid{lengthV}\;(\Varid{x},\Varid{y})\mathrel{=}\Varid{sqrt}\;(\Varid{x}\mathbin{\uparrow\uparrow}\mathrm{2}\mathbin{+}\Varid{y}\mathbin{\uparrow\uparrow}\mathrm{2}){}\<[E]%
-\\
-\>[B]{}\Varid{resizeV}\;\Varid{l}\;\Varid{v}\mathrel{=}\Varid{scaleV}\;(\Varid{l}\mathbin{/}(\Varid{lengthV}\;\Varid{v}))\;\Varid{v}{}\<[E]%
-\\[\blanklineskip]%
 \>[B]{}\Varid{toRad}\;\Varid{deg}\mathrel{=}\Varid{deg}\mathbin{/}\mathrm{360.0}\mathbin{*}(\mathrm{2.0}\mathbin{*}\Varid{pi}){}\<[E]%
 \\
 \>[B]{}\Varid{toDeg}\;\Varid{rad}\mathrel{=}\Varid{rad}\mathbin{/}(\mathrm{2.0}\mathbin{*}\Varid{pi})\mathbin{*}\mathrm{360.0}\mathbin{-}\mathrm{90.0}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{drawPTreeAux2}\;\Varid{x}\mathrel{=}(\Varid{\Conid{Graphics}.\Conid{Gloss}.scale}\;\mathrm{50.0}\;\mathrm{50.0})\comp \Varid{pictures}\comp (\Varid{drawPTreeAux}\;\Varid{x}\;(\mathrm{0.0},\mathrm{0.0})\;(\mathrm{0.0},\mathrm{1.0}))\comp \Varid{tagPTree}\;\mathrm{0}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{tagPTree}\;\Varid{n}\mathrel{=}\Varid{inFTree}\comp (\Varid{f}+\Varid{f}\times(\Varid{rec}\times\Varid{rec}))\comp \Varid{outFTree}{}\<[E]%
-\\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;\Varid{f}\mathrel{=}\conj{\Varid{id}}{\underline{\Varid{n}}}{}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\Varid{rec}\mathrel{=}\Varid{tagPTree}\;(\Varid{n}\mathbin{+}\mathrm{1}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{drawPTree}\;\Varid{t}\mathrel{=}\Varid{animation}{}\<[E]%
-\\
-\>[B]{}\hsindent{5}{}\<[5]%
-\>[5]{}\mathbf{where}\;(\Varid{animation},\anonymous )\mathrel{=}\mathsf{for}\ \Varid{body}\ ([\mskip1.5mu \Varid{f}\;\mathrm{0}\mskip1.5mu],\mathrm{0})\;(\Varid{depthFTree}\;\Varid{t}){}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\Varid{f}\;\Varid{x}\mathrel{=}\Varid{drawPTreeAux2}\;\Varid{x}\;\Varid{t}{}\<[E]%
-\\
-\>[5]{}\hsindent{6}{}\<[11]%
-\>[11]{}\Varid{body}\;(\Varid{r},\Varid{n})\mathrel{=}(\Varid{r}\plus [\mskip1.5mu \Varid{f}\;(\Varid{n}\mathbin{+}\mathrm{1})\mskip1.5mu],\Varid{n}\mathbin{+}\mathrm{1}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -2176,9 +2273,9 @@ Dedução de base e loop:
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{singletonbag}\mathrel{=}\mathit B\comp \Varid{singl}\comp \conj{\Varid{id}}{\underline{\mathrm{1}}}{}\<[E]%
 \\
-\>[B]{}\mu \mathrel{=}\bot {}\<[E]%
+\>[B]{}\mu \mathrel{=}\mathit B\comp \Varid{openBags}\comp (\mathsf{fmap}\;\Varid{unB}){}\<[E]%
 \\
-\>[B]{}\Varid{dist}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{dist}\;\Varid{a}\mathrel{=}\Varid{sumProb}\;\Varid{a}\;(\Varid{numberMarbles}\;\Varid{a}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -2228,4 +2325,3 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
 %----------------- Fim do documento -------------------------------------------%
 
 \end{document}
-
