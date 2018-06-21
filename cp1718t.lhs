@@ -106,7 +106,7 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 28
 \\\hline
 a82441 & Alexandre Mendonça Pinho
 \\
@@ -944,8 +944,9 @@ bagOfMarbles = B [(Pink,2),(Green,3),(Red,2),(Blue,2),(White,1)]
 Um valor para teste (bags de bags de bags):
 \begin{code}
 b3 :: Bag (Bag (Bag Marble))
-b3= B [(B [(B[(Pink,2),(Green,3),(Red,2),(Blue,2),(White,1)],5)
+b3 = B [(B [(B[(Pink,2),(Green,3),(Red,2),(Blue,2),(White,1)],5)
       ,(B [(Pink,1),(Green,2),(Red,1),(Blue,1)],2)],2)]
+
 \end{code}
 Outras funções auxiliares:
 \begin{code}
@@ -1679,10 +1680,93 @@ drawPTree t = animation
 
 \subsection*{Problema 5}
 
+\subsubsection*{1 - Singletonbag}
+
+A \textit{singletonbag} começa por aplicar o \textit{|(split id (const 1))|} ao seu argumento \textit{a}, cor do berlinde. Desta forma, obtém um tuplo onde o primeiro elemento é a cor do berlinde e o segundo é a constante 1. De seguida, é aplicada a função singl, que transforma o tuplo numa lista de tuplos. E, por fim, o monad \textit{B} constrói a \textit{Bag}.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |a|
+           \ar[d]_-{|singletonbag|}
+           \ar[r]_-{|(split id (const 1))|}
+&
+    |(a,Int)|
+           \ar[d]^{|singl|}
+\\
+     |Bag a|
+&
+     |[(a, Int)]|
+           \ar[l]^-{|B|}
+}
+\end{eqnarray*}
+
 \begin{code}
 singletonbag = B . singl . (split id (const 1))
+\end{code}
+
+\subsubsection*{2 - muB}
+
+O \textit{|muB|} vai aplicar sucessivamente ao seu argumento (Um saco que contém outros sacos) a função \textit{|unB|} que de modo simplista abre cada saco. 
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag (Bag a)|
+           \ar[d]_-{|muB|}
+           \ar[r]_-{|fmap unB|}
+&
+    |Bag ([(a,Int)])|
+           \ar[d]^{|openBags|}
+\\
+     |Bag a|
+&
+     |[(a, Int)]|
+           \ar[l]^-{|B|}
+}
+\end{eqnarray*}
+
+\begin{code}
 muB = B . openBags . (fmap unB)
+\end{code}
+
+\subsubsection*{3 - Dist}
+
+A função \textit{Dist} recebe um saco (Bag) e calcula qual é a probabilidade de cada cor de berlinde que esse Bag contém. Para isso, começa por calcular quantos berlindes tem o saco, através da função \textit{numberMarbles}, passando o resultado dessa função e o argumento recebido à função \textit{sumProb}. Essa função calcula a probabilidade para cada cor, depois constrói o tipo \textit{Dist}, que a cada cor associa a sua respetiva probabilidade.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag a|
+           \ar[r]_-{|sumProb|}
+&
+   |Dist a|
+}
+\end{eqnarray*}
+
+\begin{code}
 dist a = sumProb a (numberMarbles a)
+\end{code}
+
+\subsubsection*{Funções auxiliares}
+
+\begin{code}
+-- muB
+openBags :: Bag [(a, Int)] -> [(a, Int)]
+openBags = concat . (map multMarbles) . unB
+
+multMarbles :: ([(a, Int)], Int) -> [(a, Int)]
+multMarbles (a,b) = map (id >< (*b)) a
+
+
+-- Dist
+sumProb :: Bag a -> Int -> Dist a
+sumProb (B a) nMarbles = D (getProb a nMarbles)
+
+getProb :: [(a, Int)] -> Int -> [(a, ProbRep)]
+getProb [] _ = []
+getProb ((tipo, i) : xs) nMarbles = cons ((tipo, (fromIntegral i)/(fromIntegral nMarbles)), getProb xs nMarbles)
+
+numberMarbles :: Bag a -> Int
+numberMarbles (B []) = 0
+numberMarbles (B ((tipo, i) : xs)) = i + numberMarbles (B xs)
 \end{code}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
@@ -2009,24 +2093,6 @@ isBalancedFTree = isJust . cataFTree (either (const (Just 0)) g)
     where
     g (a,(l,r)) = join (liftA2 equal l r)
     equal x y = if x == y then Just (x+1) else Nothing
-
--- * pergunta 5
-openBags :: Bag [(a, Int)] -> [(a, Int)]
-openBags = concat . (map multMarbles) . unB
-
-multMarbles :: ([(a, Int)], Int) -> [(a, Int)]
-multMarbles (a,b) = map (id >< (*b)) a
-
-sumProb :: Bag a -> Int -> Dist a
-sumProb (B a) nMarbles = D (getProb a nMarbles)
-
-getProb :: [(a, Int)] -> Int -> [(a, ProbRep)]
-getProb [] _ = []
-getProb ((tipo, i) : xs) nMarbles = cons ((tipo, (fromIntegral i)/(fromIntegral nMarbles)), getProb xs nMarbles)
-
-numberMarbles :: Bag a -> Int
-numberMarbles (B []) = 0
-numberMarbles (B ((tipo, i) : xs)) = i + numberMarbles (B xs)
 \end{code}
 %endif
 

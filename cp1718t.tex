@@ -296,7 +296,7 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 28
 \\\hline
 a82441 & Alexandre Mendonça Pinho
 \\
@@ -2171,14 +2171,112 @@ Dedução de base e loop:
 
 \subsection*{Problema 5}
 
+\subsubsection*{1 - Singletonbag}
+
+A \textit{singletonbag} começa por aplicar o \textit{\ensuremath{\conj{\Varid{id}}{\underline{\mathrm{1}}}}} ao seu argumento \textit{a}, cor do berlinde. Desta forma, obtém um tuplo onde o primeiro elemento é a cor do berlinde e o segundo é a constante 1. De seguida, é aplicada a função singl, que transforma o tuplo numa lista de tuplos. E, por fim, o monad \textit{B} constrói a \textit{Bag}.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Varid{a}}
+           \ar[d]_-{\ensuremath{\Varid{singletonbag}}}
+           \ar[r]_-{\ensuremath{\conj{\Varid{id}}{\underline{\mathrm{1}}}}}
+&
+    \ensuremath{(\Varid{a},\Conid{Int})}
+           \ar[d]^{\ensuremath{\Varid{singl}}}
+\\
+     \ensuremath{\Conid{Bag}\;\Varid{a}}
+&
+     \ensuremath{[\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]}
+           \ar[l]^-{\ensuremath{\mathit B}}
+}
+\end{eqnarray*}
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{singletonbag}\mathrel{=}\mathit B\comp \Varid{singl}\comp \conj{\Varid{id}}{\underline{\mathrm{1}}}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{2 - muB}
+
+O \textit{\ensuremath{\mu }} vai aplicar sucessivamente ao seu argumento (Um saco que contém outros sacos) a função \textit{\ensuremath{\Varid{unB}}} que de modo simplista abre cada saco. 
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;(\Conid{Bag}\;\Varid{a})}
+           \ar[d]_-{\ensuremath{\mu }}
+           \ar[r]_-{\ensuremath{\mathsf{fmap}\;\Varid{unB}}}
+&
+    \ensuremath{\Conid{Bag}\;([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu])}
+           \ar[d]^{\ensuremath{\Varid{openBags}}}
 \\
-\>[B]{}\mu \mathrel{=}\bot {}\<[E]%
+     \ensuremath{\Conid{Bag}\;\Varid{a}}
+&
+     \ensuremath{[\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]}
+           \ar[l]^-{\ensuremath{\mathit B}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mu \mathrel{=}\mathit B\comp \Varid{openBags}\comp (\mathsf{fmap}\;\Varid{unB}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{3 - Dist}
+
+A função \textit{Dist} recebe um saco (Bag) e calcula qual é a probabilidade de cada cor de berlinde que esse Bag contém. Para isso, começa por calcular quantos berlindes tem o saco, através da função \textit{numberMarbles}, passando o resultado dessa função e o argumento recebido à função \textit{sumProb}. Essa função calcula a probabilidade para cada cor, depois constrói o tipo \textit{Dist}, que a cada cor associa a sua respetiva probabilidade.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;\Varid{a}}
+           \ar[r]_-{\ensuremath{\Varid{sumProb}}}
+&
+   \ensuremath{\fun{Dist}\;\Varid{a}}
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{dist}\;\Varid{a}\mathrel{=}\Varid{sumProb}\;\Varid{a}\;(\Varid{numberMarbles}\;\Varid{a}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{Funções auxiliares}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mbox{\onelinecomment  muB}{}\<[E]%
 \\
-\>[B]{}\Varid{dist}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{openBags}\mathbin{::}\Conid{Bag}\;[\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]\to [\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{openBags}\mathrel{=}\Varid{concat}\comp (\map \;\Varid{multMarbles})\comp \Varid{unB}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{multMarbles}\mathbin{::}([\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu],\Conid{Int})\to [\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{multMarbles}\;(\Varid{a},\Varid{b})\mathrel{=}\map \;(\Varid{id}\times(\mathbin{*}\Varid{b}))\;\Varid{a}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\mbox{\onelinecomment  Dist}{}\<[E]%
+\\
+\>[B]{}\Varid{sumProb}\mathbin{::}\Conid{Bag}\;\Varid{a}\to \Conid{Int}\to \fun{Dist}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{sumProb}\;(\mathit B\;\Varid{a})\;\Varid{nMarbles}\mathrel{=}\Conid{D}\;(\Varid{getProb}\;\Varid{a}\;\Varid{nMarbles}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{getProb}\mathbin{::}[\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]\to \Conid{Int}\to [\mskip1.5mu (\Varid{a},\Conid{ProbRep})\mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{getProb}\;[\mskip1.5mu \mskip1.5mu]\;\anonymous \mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
+\\
+\>[B]{}\Varid{getProb}\;((\Varid{tipo},\Varid{i})\mathbin{:}\Varid{xs})\;\Varid{nMarbles}\mathrel{=}\Varid{cons}\;((\Varid{tipo},(\Varid{fromIntegral}\;\Varid{i})\mathbin{/}(\Varid{fromIntegral}\;\Varid{nMarbles})),\Varid{getProb}\;\Varid{xs}\;\Varid{nMarbles}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{numberMarbles}\mathbin{::}\Conid{Bag}\;\Varid{a}\to \Conid{Int}{}\<[E]%
+\\
+\>[B]{}\Varid{numberMarbles}\;(\mathit B\;[\mskip1.5mu \mskip1.5mu])\mathrel{=}\mathrm{0}{}\<[E]%
+\\
+\>[B]{}\Varid{numberMarbles}\;(\mathit B\;((\Varid{tipo},\Varid{i})\mathbin{:}\Varid{xs}))\mathrel{=}\Varid{i}\mathbin{+}\Varid{numberMarbles}\;(\mathit B\;\Varid{xs}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -2228,4 +2326,3 @@ Os diagramas podem ser produzidos recorrendo à \emph{package} \LaTeX\
 %----------------- Fim do documento -------------------------------------------%
 
 \end{document}
-
