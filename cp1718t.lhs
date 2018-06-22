@@ -1759,7 +1759,7 @@ toDeg rad = rad / (2.0*pi) * 360.0 - 90.0
 
 \subsubsection*{1 - Singletonbag}
 
-A \textit{singletonbag} começa por aplicar o \textit{|(split id (const 1))|} ao seu argumento \textit{a}, cor do berlinde. Desta forma, obtém um tuplo onde o primeiro elemento é a cor do berlinde e o segundo é a constante 1. De seguida, é aplicada a função singl, que transforma o tuplo numa lista de tuplos. E, por fim, o monad \textit{B} constrói a \textit{Bag}.
+A \textit{singletonbag} começa por aplicar o \textit{|(split id (const 1))|} ao seu argumento \textit{a}, cor do berlinde. Desta forma, obtém um tuplo onde o primeiro elemento é a cor do berlinde e o segundo é a constante 1. De seguida, é aplicada a função singl, que transforma o tuplo numa lista de tuplos. E, por fim, o construtor \textit{B} constrói uma \textit{Bag}.
 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
@@ -1783,7 +1783,7 @@ singletonbag = B . singl . (split id (const 1))
 
 \subsubsection*{2 - muB}
 
-O \textit{|muB|} vai aplicar sucessivamente ao seu argumento (Um saco que contém outros sacos) a função \textit{|unB|} que de modo simplista abre cada saco. 
+O \textit{|muB|} vai aplicar sucessivamente ao seu argumento (Um saco que contém outros sacos) a função \textit{|unB|} que, de modo simplista, abre cada saco. Depois, é aplicada a função \textit{|openBags|} que volta a chamar a função \textit{|unB|} e, de seguida, passa o seu retorno à \textit{|multMarbles|} que multiplica o número de berlindes (2º elemento do tuplo \textit{(a,int)}) por um fator, que neste caso é o número de sacos daquele "tipo". Por fim, é feito o \textit{concat}, formando uma lista, e aplicado o construtor \textit{|B|}.
 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
