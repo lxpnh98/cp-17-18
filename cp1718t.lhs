@@ -1419,7 +1419,7 @@ outlinedBlock x y = Block
 
 \subsection*{Problema 3}
 
-conversão de f k:
+Conversão de f k:
 
 \begin{eqnarray*}
 \start
@@ -1428,21 +1428,21 @@ conversão de f k:
   )(
     f k (d + 1) = (d + k  + 1) * f k d
   )|
-\just\equiv{ igualdade extensional; (d + k  + 1) = l k d}
+\just\equiv{ Igualdade extensional; (d + k  + 1) = l k d}
         |lcbr(
     f k . (const 0) = (const 1)
   )(
     f k . succ = mul (split (f k) (l k))
   )|
-\just\equiv{ eq-+ }
+\just\equiv{ Eq-+ }
 |either (f k . (const 0)) (f k . succ) = either (const 1) (mul (split (f k) (l k)))|
-\just\equiv{ fusão-+; in = |either (const 0) (succ)| ; absorção-+}
+\just\equiv{ Natural-id; Fusão-+; in = |either (const 0) (succ)| ; Absorção-+ }
 |f k . in = (either (const 1) (mul)) . (id + (split (f k) (l k)))|
-\just\equiv{ f f = (id + f)}
-|f k . in = (either (const 1) (mul)) . f (split (f k) (l k))|
+\just\equiv{ F f = (id + f)}
+|f k . in = (either (const 1) (mul)) . F (split (f k) (l k))|
 \end{eqnarray*}
 
-conversão de l k:
+Conversão de l k:
 
 \begin{eqnarray*}
 \start
@@ -1452,25 +1452,25 @@ conversão de l k:
     l k (d + 1) = l k d + 1
   )|
 %
-\just\equiv{ igualdade extensional; cancelamento-x }
+\just\equiv{ Igualdade extensional; Cancelamento-x }
 %
         |lcbr(
     l k . (const 0) = succ . k
   )(
     l k . succ = succ . p2 . (split (f k) (l k))
   )|
-\just\equiv{ eq-+ }
+\just\equiv{ Eq-+ }
 %
 |either (l k . (const 0)) (l k . succ) = either (succ . k) (succ . p2 . (split (f k) (l k)))|
-\just\equiv{ fusão-+; in = |either (const 0) (succ)| ; absorção-+}
+\just\equiv{ Natural-id; Fusão-+; in = |either (const 0) (succ)| ; Absorção-+ }
 %
 |l k . in = (either (succ . k) (succ . p2)) . (id + (split (f k) (l k)))|
-\just\equiv{ f f = (id + f)}
+\just\equiv{ F f = (id + f)}
 %
-|l k . in = (either (succ . k) (succ . p2)) . f (split (f k) (l k))|
+|l k . in = (either (succ . k) (succ . p2)) . F (split (f k) (l k))|
 \end{eqnarray*}
 
-conversão de g:
+Conversão de g:
 
 \begin{eqnarray*}
 \start
@@ -1480,25 +1480,25 @@ conversão de g:
     g (d + 1) = (d + 1) * g d
   )|
 %
-\just\equiv{ igualdade extensional; (d + 1) = s d}
+\just\equiv{ Igualdade extensional; (d + 1) = s d}
 %
         |lcbr(
     g . (const 0) = (const 1)
   )(
     g . succ = mul (split g s)
   )|
-\just\equiv{ eq-+ }
+\just\equiv{ Eq-+ }
 %
 |either (g . (const 0)) (g . succ) = either (const 1) (mul (split g s))|
-\just\equiv{ fusão-+;  in = |either (const 0) (succ)| ; absorção-+}
+\just\equiv{ Natural-id; Fusão-+;  in = |either (const 0) (succ)| ; Absorção-+ }
 %
 |g . in = (either (const 1) (mul)) . (id + (split g s)|
-\just\equiv{ f f = (id + f)}
+\just\equiv{ F f = (id + f)}
 %
-|g . in = (either (const 1) (mul)) . f (split g s)|
+|g . in = (either (const 1) (mul)) . F (split g s)|
 \end{eqnarray*}
 
-conversão de s:
+Conversão de s:
 
 \begin{eqnarray*}
 \start
@@ -1508,88 +1508,88 @@ conversão de s:
     s (d + 1) = s d + 1
   )|
 %
-\just\equiv{ igualdade extensional; cancelamento-x }
+\just\equiv{ Igualdade extensional; Cancelamento-x }
 %
         |lcbr(
     s . (const 0) = (const 1)
   )(
     s . succ = succ . p2 . (split g s)
   )|
-\just\equiv{ eq-+ }
+\just\equiv{ Eq-+ }
 %
 |either (s . (const 0)) (s . succ) = either (const 1) (succ . p2 . (split g s))|
-\just\equiv{ fusão-+; in = |either (const 0) (succ)| ; absorção-+}
+\just\equiv{ Natural-id; Fusão-+; in = |either (const 0) (succ)| ; Absorção-+ }
 %
 |s . in = (either (const 1) (succ . p2)) . (id + (split g s))|
-\just\equiv{ f f = (id + f)}
+\just\equiv{ F f = (id + f)}
 %
-|s . in = (either (const 1) (succ . p2)) . f (split g s)|
+|s . in = (either (const 1) (succ . p2)) . F (split g s)|
 \end{eqnarray*}
 
-aplicando a lei da recursividade múltipla para |split (f k) (l k)|:
+Aplicando a lei da recursividade múltipla para |split (f k) (l k)|:
 
 \begin{eqnarray*}
 \start
         |lcbr(
-    f k . in = (either (const 1) (mul)) . f (split (f k) (l k))
+    f k . in = (either (const 1) (mul)) . F (split (f k) (l k))
   )(
-    l k . in = (either (succ . k) (succ . p2)) . f (split (f k) (l k))
+    l k . in = (either (succ . k) (succ . p2)) . F (split (f k) (l k))
   )|
 %
-\just\equiv{ fokkinga }
+\just\equiv{ Fokkinga }
 %
 |split (f k) (l k) = cata (split (either (const 1) (mul)) (either (succ . k) (succ . p2)))|
 \end{eqnarray*}
 
-aplicando a lei da recursividade múltipla para |split g s|:
+Aplicando a lei da recursividade múltipla para |split g s|:
 
 \begin{eqnarray*}
 \start
         |lcbr(
-    g . in = (either (const 1) (mul)) . f (split g s)
+    g . in = (either (const 1) (mul)) . F (split g s)
   )(
-    s . in = (either (const 1) (succ . p2)) . f (split g s)))
+    s . in = (either (const 1) (succ . p2)) . F (split g s)
   )|
 %
-\just\equiv{ fokkinga }
+\just\equiv{ Fokkinga }
 %
 |split g s = cata (split (either (const 1) (mul)) (either (const 1) (succ . p2))|
 \end{eqnarray*}
 
-combinação dos resultados:
+Combinação dos resultados:
 
 \begin{eqnarray*}
 \start
 |split (cata((either (const 1) (mul)),(either (succ . k) (succ . p2)))) (cata((either (const 1) (mul)),(either (const 1) (succ . p2))))|
 %
-\just\equiv{ "banana-split" }
+\just\equiv{ "Banana-split" }
 %
-|cata (((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (f p1)(f p2)|
+|cata ((((either (const 1) (mul)),(either (succ . k) (succ . p2)))><((either (const 1) (mul)),(either (const 1) (succ . p2)))) . split (F p1)(F p2))|
 %
-\just\equiv{ ff = (id + f); absorção-x }
+\just\equiv{ F f = (id + f); Absorção-x }
 %
 |cata (split (((either (const 1) (mul)),(either (succ . k) (succ . p2))).(id+p1)) (((either (const 1) (mul)),(either (const 1) (succ . p2))).(id+p2)))|
 %
-\just\equiv{ fusão-x }
+\just\equiv{ Fusão-x }
 %
 |cata (split (((either (const 1) (mul)).(id+p1),(either (succ . k) (succ . p2))).(id+p1)) (((either (const 1) (mul)).(id+p2),(either (const 1) (succ . p2))).(id+p2)))|
 %
-\just\equiv{ absorção-+ (x4); natural-id (x2) }
+\just\equiv{ Absorção-+ (x4); Natural-id (x2) }
 %
 |cata (split (((either (const 1) (mul.p1)),(either (succ.k) (succ.p2.p1)))) (((either (const 1) (mul.p2)),(either (const 1) (succ.p2.p2))))|
 \end{eqnarray*}
 
-dedução de base e loop:
+Dedução de base e loop:
 
 \begin{eqnarray*}
 \start
 |for loop base = cata (split (split (either (const 1) (mul.p1)) (either (succ) (succ.p2.p1))) (split (either (const 1) (mul.p2)) (either (const 1) (succ.p2.p2))))|
 %
-\just\equiv{ for b i = |cata (either (const i) (b))|; lei da troca (x3) }
+\just\equiv{ for b i = |cata (either (const i) (b))|; Lei da troca (x3) }
 %
 |cata (either base loop) = cata (either (split (split (const 1) (succ)) (split (const 1) (const 1))) (split (split (mul.p1) (succ.p2.p1)) (split (mul.p2) (succ.p2.p2))))|
 %
-\just\equiv{ |cata f| = |cata g| |==| f = g ; eq-+ }
+\just\equiv{ |cata f| = |cata g| |==| f = g ; Eq-+ }
 %
         |lcbr(
     base = split (split (const 1) (+1)) (split (const 1) (const 1))
